@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
+[DefaultExecutionOrder(-99)]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform headTransform;
@@ -48,6 +49,10 @@ public class PlayerController : MonoBehaviour
     [Header("Attack")]
     [SerializeField] private float comboAllowedTime = 0.3f;  // Time between attacks
     
+    [Header("Block")]
+    [SerializeField] private float blockChance = 0.7f;
+    [SerializeField] private float damageNegation = 0.7f;
+    
     [Header("Hit/Recoil")]
     [SerializeField] private float stunDuration = 1.5f;     // Duration of stun when player is stunned
     [SerializeField] private float stunChance = 0.3f;       // Probability of getting stunned (30% chance)
@@ -64,10 +69,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rb;
     private PlayerStats _playerStats;
     private PlayerAnimationController _animController;
+    private PlayerAttackModule _attackModule;
     private Collider _collider;
     
     // Internal variables
-    private bool isFacingRight = true;
     private float coyoteTimer = 0f;
     
     // dash/dodge roll variables
@@ -97,6 +102,7 @@ public class PlayerController : MonoBehaviour
 
     
 
+    public bool IsFacingRight { get; private set; } = true;
     public bool IsGrounded { get; private set; }
     public bool CanDoubleJump { get; private set; }
     public bool IsDodging { get; private set; } = false;
@@ -105,15 +111,18 @@ public class PlayerController : MonoBehaviour
     public bool IsStunned { get; private set; } = false;
     public bool IsInvulnerable { get; private set; } = false;
     public bool IsBlocking { get; private set; } = false;
+    
+    public bool IsSwitchingWeapons { get; private set; } = false;
 
     
     private bool CanChangeState()
     {
-        return !IsDodging && !IsDashing && !IsAttacking && !IsStunned;
+        return !IsDodging && !IsDashing && !IsAttacking && !IsStunned && !IsSwitchingWeapons;
     }
     
     private void Awake()
     {
+        _attackModule = GetComponent<PlayerAttackModule>();
         _collider = GetComponent<Collider>();
         _rb = GetComponent<Rigidbody>();
         _playerStats = GetComponent<PlayerStats>();
@@ -132,6 +141,11 @@ public class PlayerController : MonoBehaviour
         CheckCayoteTimer();
         CheckInput();
         CheckLockTarget();
+        if (CanChangeState() && moveInput == 0)
+        {
+            // temp hack which doesn't seme to do much 
+            SetIdle();
+        }
     }
 
     private void CheckInput()
@@ -156,16 +170,24 @@ public class PlayerController : MonoBehaviour
             SwitchWeapon(WeaponType.Wand);
         else if (Input.GetKeyDown(KeyCode.Alpha3))
             SwitchWeapon(WeaponType.GreatSword);
-            
     }
 
     public void SwitchWeapon(WeaponType weaponType)
     {
+        if(!CanChangeState()) return;
         if(_playerStats.currentWeaponType == weaponType) return;
         _playerStats.SwitchWeapon(weaponType);
         walkSpeed = _playerStats.currentWeaponData.maxWalkSpeed;
         runSpeed = _playerStats.currentWeaponData.maxRunSpeed;
         _animController.SwitchWeapon(_playerStats.currentWeaponData);
+        StartCoroutine(SwitchWeaponRoutine());
+    }
+
+    private IEnumerator SwitchWeaponRoutine()
+    {
+        IsSwitchingWeapons = true;
+        yield return new WaitForSeconds(1f);
+        IsSwitchingWeapons = false;
     }
 
     public void CheckLockTarget()
@@ -231,7 +253,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            direction = isFacingRight ? Vector3.right : Vector3.left;
+            direction = IsFacingRight ? Vector3.right : Vector3.left;
         }
         Vector3 boxHalfExtents = new Vector3(_collider.bounds.extents.x, _collider.bounds.extents.y / 3, 0.1f);  // Adjust the depth (Z) as needed
 
@@ -265,7 +287,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleBlock()
     {
-        IsBlocking = blockInput && IsGrounded && !IsAttacking && !IsDodging && !IsDashing && !IsStunned;
+        IsBlocking = blockInput && IsGrounded && !IsAttacking && !IsDodging && !IsDashing && !IsStunned &&
+                     _playerStats.currentWeaponType != WeaponType.Wand;
         // Debug.Log($"Blocking : {IsBlocking} --- {blockInput} -> {!IsAttacking} -> {IsGrounded} -> {!IsDodging} -> {!IsStunned} -> {!IsDashing}");
         _animController.SetBlock(IsBlocking);
     }
@@ -304,7 +327,7 @@ public class PlayerController : MonoBehaviour
     private void HandleMoveWithLock(float speed, int animationState)
     {
         float direction = moveInput < 0 ? -1f : 1f;
-        if (isFacingRight)
+        if (IsFacingRight)
             _animController.SetMovement(moveInput < 0 ? -1f : animationState); // Backward or Running/Walking forward
         else
             _animController.SetMovement(moveInput > 0 ? -1f : animationState); // Backward or Running/Walking forward
@@ -342,11 +365,11 @@ public class PlayerController : MonoBehaviour
 
     private void RotateBaseOnInput(bool isMovingBackward)
     {
-        if (isMovingBackward && isFacingRight)
+        if (isMovingBackward && IsFacingRight)
         {
             RotateToDirection(false); // Face left (-90°)
         }
-        else if (!isMovingBackward && !isFacingRight)
+        else if (!isMovingBackward && !IsFacingRight)
         {
             RotateToDirection(true); // Face right (90°)
         }
@@ -354,7 +377,7 @@ public class PlayerController : MonoBehaviour
     
     private void RotateToDirection(bool faceRight)
     {
-        isFacingRight = faceRight;
+        IsFacingRight = faceRight;
         transform.rotation = Quaternion.Euler(0, faceRight ? 90 : -90, 0);
     }
     #endregion
@@ -419,9 +442,9 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInput == 0)
             {
-                moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
+                moveInput = IsFacingRight? -1 : 1; // Default to forward dodge if no input
             }
-            if (isFacingRight)
+            if (IsFacingRight)
             {
                 if (moveInput >= 0) // Forward dash
                     StartCoroutine(Dash(Vector3.right, true));
@@ -440,7 +463,7 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInput == 0)
             {
-                if (isFacingRight)
+                if (IsFacingRight)
                     StartCoroutine(Dash(Vector3.left, false));
                 else
                     StartCoroutine(Dash(Vector3.right, false));
@@ -465,9 +488,9 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInput == 0)
             {
-                moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
+                moveInput = IsFacingRight? -1 : 1; // Default to forward dodge if no input
             }
-            if (isFacingRight)
+            if (IsFacingRight)
             {
                 if (moveInput >= 0) // Forward dodge roll
                     StartCoroutine(DodgeRoll(Vector3.right, true));
@@ -486,7 +509,7 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInput == 0)
             {
-                if (isFacingRight)
+                if (IsFacingRight)
                     StartCoroutine(DodgeRoll(Vector3.left, false));
                 else
                     StartCoroutine(DodgeRoll(Vector3.right, false));
@@ -557,11 +580,6 @@ public class PlayerController : MonoBehaviour
         if(_playerStats.currentWeaponData.airAttacks == null || _playerStats.currentWeaponData.airAttacks.Count <= 0) return;
         lightComboStep = 1;
         var currentAttakInfo = _playerStats.currentWeaponData.airAttacks[Random.Range(0, _playerStats.currentWeaponData.airAttacks.Count)];           
-        if(!_playerStats.IsAttackPossible(currentAttakInfo)) return;
-        _playerStats.AttackModifiers(currentAttakInfo);
-        IsAttacking = true;
-        _animController.TriggerAttack(currentAttakInfo);
-        isComboActive = true;
         StartCoroutine(HandleAttackRoutine(currentAttakInfo));
     }
     private void HandleMainAttack(ref int stepCombo, List<AttackInfo> attackLib)
@@ -579,18 +597,18 @@ public class PlayerController : MonoBehaviour
             Debug.Log($"Combo continued: {stepCombo}");
         }
         var currentAttakInfo = attackLib[stepCombo - 1];
-        
-        if(!_playerStats.IsAttackPossible(currentAttakInfo)) return;
-        _playerStats.AttackModifiers(currentAttakInfo);
-        IsAttacking = true;
-        _animController.TriggerAttack(currentAttakInfo);
-        isComboActive = true;
         // Start a coroutine to manage the combo and cooldown for the current step
         StartCoroutine(HandleAttackRoutine(currentAttakInfo));
     }
     
     private IEnumerator HandleAttackRoutine(AttackInfo currentAttakInfo)
     {
+        if(!_playerStats.IsAttackPossible(currentAttakInfo)) yield break;
+        _playerStats.AttackModifiers(currentAttakInfo);
+        IsAttacking = true;
+        _animController.TriggerAttack(currentAttakInfo);
+        isComboActive = true;
+        _attackModule.SetAttackInfo(currentAttakInfo);
         yield return new WaitForSeconds(currentAttakInfo.attackDuration);
         lastAttackTime = Time.time;
         IsAttacking = false;
@@ -606,11 +624,17 @@ public class PlayerController : MonoBehaviour
             _animController.TriggerDeath();
         }
     }
-    public void Hit(int damage, bool forceStun = false, Transform hitter = null)
+    public void TakeDamage(int damage, bool forceStun = false, Transform hitter = null)
     {
         if (IsInvulnerable) return;
         lastHitTime = Time.time;
         Debug.Log("Player got hit! Damage: " + damage);
+        if (IsBlocking)
+        {
+            var blocked = Random.value <= blockChance;
+            if (blocked)
+                damage = (int)(damage * damageNegation);
+        }
         _playerStats.TakeDamage(damage);
         if (_playerStats.IsDead)
         {
@@ -705,23 +729,23 @@ public class PlayerController : MonoBehaviour
     [Button]
     public void TestHit()
     {
-        Hit(10);
+        TakeDamage(10);
     }
     [Button]
     public void TestHitStun()
     {
-        Hit(10, true);
+        TakeDamage(10, true);
     }
     [Button]
     public void TestHitPushback()
     {
-        Hit(10, hitter: currentTarget.transform);
+        TakeDamage(10, hitter: currentTarget.transform);
     }
 
     [Button]
     public void TestHitPushbackStun()
     {
-        Hit(10, true, currentTarget.transform);
+        TakeDamage(10, true, currentTarget.transform);
     }
     #endregion
 

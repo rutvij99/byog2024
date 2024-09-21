@@ -21,9 +21,9 @@ public class AttackInfo
     public float manaCost;
     public float healthCost;
     public float damage;
-    public float maxChargeMultiplier;
 }
 
+[DefaultExecutionOrder(-100)]
 public class PlayerStats : MonoBehaviour
 {
     [Header("Max Cap")]
