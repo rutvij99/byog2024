@@ -92,22 +92,22 @@ public class PlayerController : MonoBehaviour
     private bool targetLockInput;
 
     
-    public bool IsAttacking { get; private set; } = false;
 
     public bool IsGrounded { get; private set; }
-
     public bool CanDoubleJump { get; private set; }
-
     public bool IsDodging { get; private set; } = false;
-
     public bool IsDashing { get; private set; } = false;
-
+    public bool IsAttacking { get; private set; } = false;
     public bool IsStunned { get; private set; } = false;
-
     public bool IsInvulnerable { get; private set; } = false;
-
     public bool IsBlocking { get; private set; } = false;
 
+    
+    private bool CanChangeState()
+    {
+        return !IsDodging && !IsDashing && !IsAttacking && !IsStunned;
+    }
+    
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -147,6 +147,7 @@ public class PlayerController : MonoBehaviour
 
     public void CheckLockTarget()
     {
+        if(!targetLockInput) return;
         targetLockInput = false;
         isTargetLockEnabled = !isTargetLockEnabled;
         if (!isTargetLockEnabled)
@@ -350,97 +351,96 @@ public class PlayerController : MonoBehaviour
         }
     }
     #endregion
-    
+
+    #region Dash/Dodge
     private void HandleDash()
     {
-        if (!AllowDashOrDodge() || !_playerStats.IsDashPossible()) return;
-        // Handle dash input (forward/backward)
-        if (dashInput && Time.time > lastDash + dashCooldown)
+        if(!CanChangeState() || !IsGrounded) return;
+        if (!_playerStats.IsDashPossible()) return;
+        if (!dashInput || Time.time <= lastDash + dashCooldown) return;
+        
+        if (isTargetLockEnabled)
         {
-            if (isTargetLockEnabled)
+            if (moveInput == 0)
             {
-                if (moveInput == 0)
-                {
-                    moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
-                }
-                if (isFacingRight)
-                {
-                    if (moveInput >= 0) // Forward dash
-                        StartCoroutine(Dash(Vector3.right, true));
-                    else // Backward dash
-                        StartCoroutine(Dash(Vector3.left, false));
-                }
-                else
-                {
-                    if (moveInput >= 0) // Forward dodge roll
-                        StartCoroutine(Dash(Vector3.right, false));
-                    else // Backward dodge roll
-                        StartCoroutine(Dash(Vector3.left, true));
-                }
+                moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
+            }
+            if (isFacingRight)
+            {
+                if (moveInput >= 0) // Forward dash
+                    StartCoroutine(Dash(Vector3.right, true));
+                else // Backward dash
+                    StartCoroutine(Dash(Vector3.left, false));
             }
             else
             {
-                if (moveInput == 0)
-                {
-                    if (isFacingRight)
-                        StartCoroutine(Dash(Vector3.left, false));
-                    else
-                        StartCoroutine(Dash(Vector3.right, false));
-                }
+                if (moveInput >= 0) // Forward dodge roll
+                    StartCoroutine(Dash(Vector3.right, false));
+                else // Backward dodge roll
+                    StartCoroutine(Dash(Vector3.left, true));
+            }
+        }
+        else
+        {
+            if (moveInput == 0)
+            {
+                if (isFacingRight)
+                    StartCoroutine(Dash(Vector3.left, false));
                 else
-                {
-                    if (moveInput >= 0) // Forward dash
-                        StartCoroutine(Dash(Vector3.right, true));
-                    else // Backward dash
-                        StartCoroutine(Dash(Vector3.left, true));
-                }
+                    StartCoroutine(Dash(Vector3.right, false));
+            }
+            else
+            {
+                if (moveInput >= 0) // Forward dash
+                    StartCoroutine(Dash(Vector3.right, true));
+                else // Backward dash
+                    StartCoroutine(Dash(Vector3.left, true));
             }
         }
     }
     
     private void HandleDodgeRoll()
     {
-        if (!AllowDashOrDodge() || !_playerStats.IsDodgePossible()) return;
-        // Dodge roll (forward/backward)
-        if (dodgeInput && Time.time > lastDodge + dodgeRollCooldown)
+        if(!CanChangeState() || !IsGrounded) return;
+        if (!_playerStats.IsDodgePossible()) return;
+        if (!dodgeInput || Time.time <= lastDodge + dodgeRollCooldown) return;
+        
+        if (isTargetLockEnabled)
         {
-            if (isTargetLockEnabled)
+            if (moveInput == 0)
             {
-                if (moveInput == 0)
-                {
-                    moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
-                }
-                if (isFacingRight)
-                {
-                    if (moveInput >= 0) // Forward dodge roll
-                        StartCoroutine(DodgeRoll(Vector3.right, true));
-                    else // Backward dodge roll
-                        StartCoroutine(DodgeRoll(Vector3.left, false));
-                }
-                else
-                {
-                    if (moveInput >= 0) // Forward dodge roll
-                        StartCoroutine(DodgeRoll(Vector3.right, false));
-                    else // Backward dodge roll
-                        StartCoroutine(DodgeRoll(Vector3.left, true));
-                }
+                moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
+            }
+            if (isFacingRight)
+            {
+                if (moveInput >= 0) // Forward dodge roll
+                    StartCoroutine(DodgeRoll(Vector3.right, true));
+                else // Backward dodge roll
+                    StartCoroutine(DodgeRoll(Vector3.left, false));
             }
             else
             {
-                if (moveInput == 0)
-                {
-                    if (isFacingRight)
-                        StartCoroutine(DodgeRoll(Vector3.left, false));
-                    else
-                        StartCoroutine(DodgeRoll(Vector3.right, false));
-                }
+                if (moveInput >= 0) // Forward dodge roll
+                    StartCoroutine(DodgeRoll(Vector3.right, false));
+                else // Backward dodge roll
+                    StartCoroutine(DodgeRoll(Vector3.left, true));
+            }
+        }
+        else
+        {
+            if (moveInput == 0)
+            {
+                if (isFacingRight)
+                    StartCoroutine(DodgeRoll(Vector3.left, false));
                 else
-                {
-                    if (moveInput >= 0) // Forward dodge roll
-                        StartCoroutine(DodgeRoll(Vector3.right, true));
-                    else // Backward dodge roll
-                        StartCoroutine(DodgeRoll(Vector3.left, true));
-                }
+                    StartCoroutine(DodgeRoll(Vector3.right, false));
+            }
+            else
+            {
+                if (moveInput >= 0) // Forward dodge roll
+                    StartCoroutine(DodgeRoll(Vector3.right, true));
+                else // Backward dodge roll
+                    StartCoroutine(DodgeRoll(Vector3.left, true));
             }
         }
     }
@@ -448,7 +448,7 @@ public class PlayerController : MonoBehaviour
     
     private IEnumerator Dash(Vector3 direction, bool isForward)
     {
-        HandleIFrames(dashIFramesTime);
+        GrantIFrames(dashIFramesTime);
         _playerStats.DashModifiers();
         IsDashing = true;
         _animController.TriggerDash(isForward);
@@ -461,7 +461,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DodgeRoll(Vector3 direction, bool isForward)
     {
-        HandleIFrames(dodgeIFramesTime);
+        GrantIFrames(dodgeIFramesTime);
         _playerStats.DodgeModifiers();
         IsDodging = true;
         _animController.TriggerDodgeRoll(isForward); // Trigger dodge roll animation (forward/backward)
@@ -471,20 +471,15 @@ public class PlayerController : MonoBehaviour
         lastDodge = Time.time; // Record dodge time
         IsDodging = false;
     }
-    
-    private bool AllowDashOrDodge()
-    {
-        return IsGrounded && !IsDodging && !IsDashing && !IsAttacking;
-    }
+    #endregion
 
     #region Attack
-
     private Coroutine attackResetter;
-
     private void HandleAttack()
     {
         if (attackInput && !IsAttacking)
         {
+            if(!CanChangeState()) return;
             IsAttacking = true;
             lastAttackTime = Time.time; // Track last attack time
             
@@ -537,7 +532,6 @@ public class PlayerController : MonoBehaviour
     #endregion
     
     #region Get Hit Logic
-    // todo add push back on hit if too much damage
     public void Hit(int damage, bool forceStun = false, Transform hitter = null)
     {
         if (IsInvulnerable) return;
@@ -553,7 +547,7 @@ public class PlayerController : MonoBehaviour
         var isStunned = UnityEngine.Random.value < stunChance || forceStun;
         if (hitter != null)
         {
-            ApplyPushBack(hitter, isStunned);
+            ApplyPushBack(hitter, damage, isStunned);
         }
         if (!IsStunned)
         {
@@ -561,18 +555,17 @@ public class PlayerController : MonoBehaviour
             {
                 StunPlayer();
             }
-            HandleIFrames(hitIFrames);
+            GrantIFrames(hitIFrames);
         }
         _animController.TriggerHit();
     }
     
-    private void ApplyPushBack(Transform hitter, bool actualStun)
+    private void ApplyPushBack(Transform hitter, int damage, bool actualStun)
     {
-        // temp stun for pushback
         IsStunned = true;
         Vector3 directionAwayFromHitter = (transform.position - hitter.position).normalized;
-        // Set the velocity directly for a more precise push-back
-        _rb.linearVelocity = directionAwayFromHitter * pushBackForce;
+        float scaledPushBackForce = pushBackForce + (damage * 0.1f); // Scale push-back with damage
+        _rb.linearVelocity = directionAwayFromHitter * scaledPushBackForce;
         StartCoroutine(StopPushBackAfterDelay(actualStun));
     }
 
@@ -599,14 +592,14 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(stunDuration);
         IsStunned = false;
         Debug.Log("Player recovered from stun.");
-        HandleIFrames(stunnedIFramesTime);
+        GrantIFrames(stunnedIFramesTime);
         _animController.SetStun(IsStunned);
     }
     #endregion
     
     #region IFrame
     private Coroutine iFrameRoutine;
-    private void HandleIFrames(float iframeDuration, bool useStunIFramesTime = false)
+    private void GrantIFrames(float iframeDuration, bool useStunIFramesTime = false)
     {
         IsInvulnerable = true;
         Debug.Log("Player iFrames started!");
@@ -631,7 +624,16 @@ public class PlayerController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+
+        // Draw the push-back direction when hit
+        // if (currentTarget != null)
+        // {
+        //     Gizmos.color = Color.blue;
+        //     Vector3 direction = (transform.position - currentTarget.transform.position).normalized;
+        //     Gizmos.DrawRay(transform.position, direction * 2f); // Extend the ray for visualization
+        // }
     }
+    
     [Button]
     public void TestHit()
     {

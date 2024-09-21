@@ -1437,7 +1437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ddd9b0cb71f4dbea060c6607f4e8a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tg: {fileID: 1916953985}
+  cinemachineTargetGroup: {fileID: 1916953985}
   currentTarget: {fileID: 1296732254}
   isTargetLockEnabled: 0
   walkSpeed: 5
@@ -1464,8 +1464,12 @@ MonoBehaviour:
   comboResetTime: 1
   stunDuration: 1.5
   stunChance: 0.3
-  invulnerabilityTime: 1
-  stunnedInvulnerabilityTime: 1
+  pushBackForce: 5
+  pushBackDuration: 0.2
+  hitIFrames: 1
+  stunnedIFramesTime: 1
+  dashIFramesTime: 0.2
+  dodgeIFramesTime: 0.3
 --- !u!54 &1038687042
 Rigidbody:
   m_ObjectHideFlags: 0
