@@ -1307,7 +1307,7 @@ MonoBehaviour:
   ValidStage: -1
   closeRange: 0
   maxDist: 999
-  stoppingDist: 2
+  stoppingDist: 2.5
   moveAnim: {fileID: 7400000, guid: 2a48ad16a2174335aa6f4cfd95f2cdcd, type: 3}
   timeBeforeAction: 0
   speed: 0.01
@@ -1325,7 +1325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ValidStage: -1
   closeRange: 1
-  maxDist: 2
+  maxDist: 2.5
   startDelay: 0.45
   damage: 15
   attackClip: {fileID: 7400000, guid: fca008c643d44019b538436bbb84a4b8, type: 3}
@@ -1345,7 +1345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ValidStage: -1
   closeRange: 1
-  maxDist: 4
+  maxDist: 5
   startDelay: 0.25
   damage: 20
   attackClip: {fileID: 7400000, guid: 816d4568dd384aa7a2270f040e97cedf, type: 3}
