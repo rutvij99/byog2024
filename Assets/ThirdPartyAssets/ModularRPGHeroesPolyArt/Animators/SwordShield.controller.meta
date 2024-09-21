@@ -1,15 +1,8 @@
 fileFormatVersion: 2
-guid: a28d9c802273af841b75b66ef5c08232
-timeCreated: 1526613214
-licenseType: Store
+guid: 503905c93ac8d4147ba5d5a1c23c6f77
 NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 138600
-  packageName: Modular RPG Hero Polyart
-  packageVersion: 1.5
-  assetPath: Assets/ModularRPGHeroesPolyArt/Animators/SwordShield.controller
-  uploadId: 544885
