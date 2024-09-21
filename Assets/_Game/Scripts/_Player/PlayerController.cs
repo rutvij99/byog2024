@@ -46,7 +46,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundCheckRadius = 0.2f;
 
     [Header("Attack")]
-    [SerializeField] private float[] attackTimes = new float[5];  // Time of each attack in the combo
     [SerializeField] private float comboAllowedTime = 0.3f;  // Time between attacks
     
     [Header("Hit/Recoil")]
@@ -61,7 +60,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float stunnedIFramesTime = 1.0f; // Time during which player can't get hit after taking damage
     [SerializeField] private float dashIFramesTime = 0.2f;
     [SerializeField] private float dodgeIFramesTime = 0.3f;
-    
     
     private Rigidbody _rb;
     private PlayerStats _playerStats;
@@ -78,7 +76,8 @@ public class PlayerController : MonoBehaviour
 
     // Attack variables
     private bool isComboActive = false;  // True when the player is in an active combo
-    private int comboStep = 0;             // Current attack step in combo
+    private int lightComboStep = 0;             // Current attack step in combo
+    private int heavyComboStep = 0;             // Current attack step in combo
     private float lastAttackTime = 0f;     // Tracks the last time an attack occurred
     private float comboResetTimer = 0f;    // Timer for resetting the combo if no further attacks
 
@@ -92,6 +91,7 @@ public class PlayerController : MonoBehaviour
     private bool dashInput;
     private bool dodgeInput;
     private bool lightAttackInput;
+    private bool heavyAttackInput;
     private bool blockInput;
     private bool targetLockInput;
 
@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        
+        SwitchWeapon(WeaponType.SwordShield);
     }
 
     private void Update()
@@ -145,9 +145,27 @@ public class PlayerController : MonoBehaviour
             dodgeInput = true;
         if (Input.GetKeyDown(KeyCode.Mouse0))  // Left mouse button for attack
             lightAttackInput = true;
-        blockInput = Input.GetKey(KeyCode.Mouse1);
+        if (Input.GetKeyDown(KeyCode.Mouse1))  // Left mouse button for attack
+            heavyAttackInput = true;
+        blockInput = Input.GetKey(KeyCode.E);
         if (Input.GetKeyDown(KeyCode.Q))
             targetLockInput = true;
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+            SwitchWeapon(WeaponType.SwordShield);
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+            SwitchWeapon(WeaponType.Wand);
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+            SwitchWeapon(WeaponType.GreatSword);
+            
+    }
+
+    public void SwitchWeapon(WeaponType weaponType)
+    {
+        if(_playerStats.currentWeaponType == weaponType) return;
+        _playerStats.SwitchWeapon(weaponType);
+        walkSpeed = _playerStats.currentWeaponData.maxWalkSpeed;
+        runSpeed = _playerStats.currentWeaponData.maxRunSpeed;
+        _animController.SwitchWeapon(_playerStats.currentWeaponData);
     }
 
     public void CheckLockTarget()
@@ -180,6 +198,7 @@ public class PlayerController : MonoBehaviour
         dashInput = false;
         dodgeInput = false;
         lightAttackInput = false;
+        heavyAttackInput = false;
         blockInput = false;
         targetLockInput = false;
     }
@@ -240,7 +259,7 @@ public class PlayerController : MonoBehaviour
         HandleDash();
         HandleDodgeRoll();
         HandleBlock();
-        HandleLightAttack();
+        HandleAttacks();
         ResetInputs();
     }
 
@@ -514,59 +533,60 @@ public class PlayerController : MonoBehaviour
     private void HandleAttacks()
     {
         if (!CanChangeState()) return;
-        if (!IsGrounded)
+
+        if (lightAttackInput)
         {
-            HandleAirAttack();
+            if (!IsGrounded)
+            {
+                HandleAirAttack();
+                return;
+            }
+            HandleMainAttack(ref lightComboStep, _playerStats.currentWeaponData.lightMeleeAttacks);
             return;
         }
-        HandleLightAttack();
+
+        if (heavyAttackInput)
+        {
+            HandleMainAttack(ref heavyComboStep, _playerStats.currentWeaponData.heavyMeleeAttacks);
+            return;
+        }
     }
 
     private void HandleAirAttack()
     {
-        if (lightAttackInput)
-        {
-            comboStep = 1;
-            var currentAttakInfo = _playerStats.airAttacks[Random.Range(0, _playerStats.airAttacks.Count)];           
-            if(!_playerStats.IsAttackPossible(currentAttakInfo)) return;
-            _playerStats.AttackModifiers(currentAttakInfo);
-            IsAttacking = true;
-            _animController.TriggerAttack(currentAttakInfo);
-            isComboActive = true;
-            StartCoroutine(HandleAttackRoutine(currentAttakInfo));
-        }
+        if(_playerStats.currentWeaponData.airAttacks == null || _playerStats.currentWeaponData.airAttacks.Count <= 0) return;
+        lightComboStep = 1;
+        var currentAttakInfo = _playerStats.currentWeaponData.airAttacks[Random.Range(0, _playerStats.currentWeaponData.airAttacks.Count)];           
+        if(!_playerStats.IsAttackPossible(currentAttakInfo)) return;
+        _playerStats.AttackModifiers(currentAttakInfo);
+        IsAttacking = true;
+        _animController.TriggerAttack(currentAttakInfo);
+        isComboActive = true;
+        StartCoroutine(HandleAttackRoutine(currentAttakInfo));
     }
-    private void HandleLightAttack()
+    private void HandleMainAttack(ref int stepCombo, List<AttackInfo> attackLib)
     {
-        if (lightAttackInput)
+        if(attackLib == null || attackLib.Count <= 0) return;
+        // Check if it's a new combo or continuation of an existing combo
+        if (stepCombo == 0 || Time.time - lastAttackTime >= comboAllowedTime || lightComboStep >= attackLib.Count)
         {
-            if (!CanChangeState()) return;
-
-            // Check if it's a new combo or continuation of an existing combo
-            if (comboStep == 0 || Time.time - lastAttackTime >= comboAllowedTime || comboStep >= _playerStats.lightMeleeAttacks.Count)
-            {
-                comboStep = 1;
-                Debug.Log($"Combo reset: {comboStep}");
-            }
-            else if (comboStep < _playerStats.lightMeleeAttacks.Count)
-            {
-                comboStep++;
-                Debug.Log($"Combo continued: {comboStep}");
-            }
-            var currentAttakInfo = _playerStats.lightMeleeAttacks[comboStep - 1];
-            
-            if(!_playerStats.IsAttackPossible(currentAttakInfo)) return;
-            _playerStats.AttackModifiers(currentAttakInfo);
-            IsAttacking = true;
-            _animController.TriggerAttack(currentAttakInfo);
-            isComboActive = true;
-            // Start a coroutine to manage the combo and cooldown for the current step
-            StartCoroutine(HandleAttackRoutine(currentAttakInfo));
+            stepCombo = 1;
+            Debug.Log($"Combo reset: {stepCombo}");
         }
-    }
-    private void HandleHeavyAttacks()
-    {
+        else if (stepCombo < attackLib.Count)
+        {
+            stepCombo++;
+            Debug.Log($"Combo continued: {stepCombo}");
+        }
+        var currentAttakInfo = attackLib[stepCombo - 1];
         
+        if(!_playerStats.IsAttackPossible(currentAttakInfo)) return;
+        _playerStats.AttackModifiers(currentAttakInfo);
+        IsAttacking = true;
+        _animController.TriggerAttack(currentAttakInfo);
+        isComboActive = true;
+        // Start a coroutine to manage the combo and cooldown for the current step
+        StartCoroutine(HandleAttackRoutine(currentAttakInfo));
     }
     
     private IEnumerator HandleAttackRoutine(AttackInfo currentAttakInfo)
@@ -578,6 +598,14 @@ public class PlayerController : MonoBehaviour
     #endregion
     
     #region Get Hit Logic
+    public void InstantKill()
+    {
+        _playerStats.TakeDamage(_playerStats.currentHealth + 10);
+        if (_playerStats.IsDead)
+        {
+            _animController.TriggerDeath();
+        }
+    }
     public void Hit(int damage, bool forceStun = false, Transform hitter = null)
     {
         if (IsInvulnerable) return;

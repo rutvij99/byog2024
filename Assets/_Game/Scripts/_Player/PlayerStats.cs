@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Serialization;
 
+public enum WeaponType
+{
+    None,
+    SwordShield,
+    GreatSword,
+    Wand
+}
 [System.Serializable]
 public class AttackInfo
 {
-    public enum AttackType
-    {
-        Melee,
-        Range
-    }
-
     public string attackId;
-    public AttackType type;
     public float attackDuration;
     public float staminaCost;
     public float manaCost;
@@ -61,18 +62,18 @@ public class PlayerStats : MonoBehaviour
     public float sprintCostPerSecond = 5f;
     public float sprintCostMultiplier = 0.4f;
 
-    
-    [Header("Attacks")]
-    public List<AttackInfo> airAttacks;
-    public List<AttackInfo> lightMeleeAttacks;
-    public List<AttackInfo> heavyMeleeAttacks;
-    public List<AttackInfo> rangeAttacks;
+
+    [Header("Attacks")] 
+    public List<WeaponData> weaponDB;
+    public WeaponData currentWeaponData;
     
     [Space(20)]
     [ReadOnly] public float healthRegenTimer = 0f;
     [ReadOnly] public float staminaRegenTimer = 0f;
     [ReadOnly] public float manaRegenTimer = 0f;
     public bool IsDead { get; private set; } = false;
+
+    public WeaponType currentWeaponType = WeaponType.None;
 
     private void Start()
     {
@@ -230,6 +231,12 @@ public class PlayerStats : MonoBehaviour
 
 
     #region Usages
+
+    public void SwitchWeapon(WeaponType weaponType)
+    {
+        currentWeaponType = weaponType;
+        currentWeaponData = weaponDB.Find(x => x.weaponType == weaponType);
+    }
 
     public bool IsAttackPossible(AttackInfo attackInfo)
     {

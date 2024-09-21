@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8da22b180951540a98454134e623f67f, type: 3}
+  m_Name: GreatSwordWeaponData
+  m_EditorClassIdentifier: 
+  weaponType: 2
+  animatorController: {fileID: 22100000, guid: ed8c13d89144b4067bc7670d039eb771, type: 2}
+  airAttacks:
+  - attackId: JumpAttack
+    attackDuration: 0.4
+    staminaCost: 20
+    manaCost: 0
+    healthCost: 0
+    damage: 0
+    maxChargeMultiplier: 0
+  lightMeleeAttacks:
+  - attackId: 2H_C1
+    attackDuration: 0.3
+    staminaCost: 10
+    manaCost: 0
+    healthCost: 0
+    damage: 0
+    maxChargeMultiplier: 0
+  - attackId: 2H_C2
+    attackDuration: 0.3
+    staminaCost: 10
+    manaCost: 0
+    healthCost: 0
+    damage: 0
+    maxChargeMultiplier: 0
+  - attackId: 2H_C3
+    attackDuration: 0.3
+    staminaCost: 15
+    manaCost: 0
+    healthCost: 0
+    damage: 0
+    maxChargeMultiplier: 0
+  - attackId: 2H_C4
+    attackDuration: 0.6
+    staminaCost: 20
+    manaCost: 0
+    healthCost: 0
+    damage: 0
+    maxChargeMultiplier: 0
+  - attackId: 2H_C5
+    attackDuration: 1
+    staminaCost: 25
+    manaCost: 0
+    healthCost: 0
+    damage: 0
+    maxChargeMultiplier: 0
+  heavyMeleeAttacks:
+  - attackId: HeavyAttack_1
+    attackDuration: 1
+    staminaCost: 40
+    manaCost: 0
+    healthCost: 0
+    damage: 0
+    maxChargeMultiplier: 0
+  maxWalkSpeed: 3
+  maxRunSpeed: 6
