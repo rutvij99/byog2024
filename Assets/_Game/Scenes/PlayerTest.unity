@@ -228,6 +228,11 @@ Transform:
   - {fileID: 831649967}
   m_Father: {fileID: 1778589221}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &237515113 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3198343427104910819, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
+  m_PrefabInstance: {fileID: 1614637900}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &299999702
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,6 +369,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 299999702}
   m_CullTransparentMesh: 1
+--- !u!1 &304802310 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3198343427104910733, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
+  m_PrefabInstance: {fileID: 1614637900}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &329518861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,6 +1411,7 @@ GameObject:
   - component: {fileID: 1038687041}
   - component: {fileID: 1038687043}
   - component: {fileID: 1038687044}
+  - component: {fileID: 1038687046}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -1461,12 +1472,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   groundCheckRadius: 0.2
-  attackTimes:
-  - 0.3
-  - 0.3
-  - 0.3
-  - 0.7
-  - 1
   comboAllowedTime: 0.3
   stunDuration: 1.5
   stunChance: 0.3
@@ -1516,6 +1521,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1614637902}
+  swordShieldObjects:
+  - {fileID: 1530772357}
+  - {fileID: 304802310}
+  wandObjects:
+  - {fileID: 237515113}
+  greatSwordObjects:
+  - {fileID: 1614637903}
 --- !u!114 &1038687044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1533,7 +1545,7 @@ MonoBehaviour:
   maxAllowedStamina: 1000
   maxHealth: 100
   maxMana: 50
-  maxStamina: 100
+  maxStamina: 200
   currentHealth: 0
   currentMana: 0
   currentStamina: 0
@@ -1553,55 +1565,15 @@ MonoBehaviour:
   subsequentAttackCostMultiplier: 10
   sprintCostPerSecond: 5
   sprintCostMultiplier: 0.4
-  airAttacks:
-  - attackId: JumpAttack
-    type: 0
-    maxChargeMultiplier: 1
-    attackDuration: 0.5
-    staminaCost: 20
-    manaCost: 0
-    healthCost: 0
-  lightMeleeAttacks:
-  - attackId: AttackCombo_1
-    type: 0
-    maxChargeMultiplier: 0
-    attackDuration: 0.3
-    staminaCost: 10
-    manaCost: 0
-    healthCost: 0
-  - attackId: AttackCombo_2
-    type: 0
-    maxChargeMultiplier: 0
-    attackDuration: 0.3
-    staminaCost: 10
-    manaCost: 0
-    healthCost: 0
-  - attackId: AttackCombo_3
-    type: 0
-    maxChargeMultiplier: 0
-    attackDuration: 0.3
-    staminaCost: 15
-    manaCost: 0
-    healthCost: 0
-  - attackId: AttackCombo_4
-    type: 0
-    maxChargeMultiplier: 0
-    attackDuration: 0.7
-    staminaCost: 20
-    manaCost: 0
-    healthCost: 0
-  - attackId: AttackCombo_5
-    type: 0
-    maxChargeMultiplier: 0
-    attackDuration: 1
-    staminaCost: 25
-    manaCost: 0
-    healthCost: 0
-  heavyMeleeAttacks: []
-  rangeAttacks: []
+  weaponDB:
+  - {fileID: 11400000, guid: 623f5397f41ef48cfbbabc850e2d9356, type: 2}
+  - {fileID: 11400000, guid: 6336ca236005441868fa7a58f40f8eb0, type: 2}
+  - {fileID: 11400000, guid: a1f444836359e4152b39077c949821ea, type: 2}
+  currentWeaponData: {fileID: 0}
   healthRegenTimer: 0
   staminaRegenTimer: 0
   manaRegenTimer: 0
+  currentWeaponType: 0
 --- !u!136 &1038687045
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1625,6 +1597,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1038687046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038687039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d1b3ba1d45a497bb554f84f0ca60520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1265747940
 GameObject:
   m_ObjectHideFlags: 0
@@ -2244,6 +2228,11 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!1 &1530772357 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3198343427104910787, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
+  m_PrefabInstance: {fileID: 1614637900}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1614637900
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2750,7 +2739,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3198343427104910723, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3198343427104910725, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
       propertyPath: m_Layer
@@ -2880,6 +2869,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 3198343427104910783, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3198343427104910785, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -2887,6 +2880,10 @@ PrefabInstance:
     - target: {fileID: 3198343427104910787, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3198343427104910787, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3198343427104910789, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
       propertyPath: m_Layer
@@ -3016,6 +3013,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 3198343427104910847, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3198343427105009915, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -3077,6 +3078,11 @@ Transform:
 --- !u!95 &1614637902 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 3198343427114295103, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
+  m_PrefabInstance: {fileID: 1614637900}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1614637903 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3198343427104910725, guid: 195f25bc5343d604c8c4b0ef579e478c, type: 3}
   m_PrefabInstance: {fileID: 1614637900}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1615298455

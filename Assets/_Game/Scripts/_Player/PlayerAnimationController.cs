@@ -1,39 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerAnimationController : MonoBehaviour
 {
-	// Reference to the Animator component
 	[SerializeField] private Animator animator;
-	// The index of the full-body layer in the Animator
-	private int fullBodyLayerIndex = 2; // Set this to the correct index of your "FullBodyCombat" layer
 
-	void Start()
-	{
-		// Get the Animator component attached to the player
-		// animator = GetComponent<Animator>();
-	}
+	[FormerlySerializedAs("meleeObjects")] [SerializeField] private List<GameObject> swordShieldObjects;
+	[FormerlySerializedAs("rangeObjects")] [SerializeField] private List<GameObject> wandObjects;
+	[SerializeField] private List<GameObject> greatSwordObjects;
+	
+	private int upperBodyLayerIndex = 1; 
+	private int fullBodyLayerIndex = 2;
 
-	// This method sets the x_movement value (movement state: -1, 0, 1, 2)
 	public void SetMovement(float x_movement)
 	{
 		animator.SetFloat("x_movement", x_movement);
 	}
 
-	// This method sets the grounded state (true if grounded, false if not)
 	public void SetGrounded(bool isGrounded)
 	{
 		animator.SetBool("isGrounded", isGrounded);
 	}
 
-	// This method triggers the jump animation
 	public void TriggerJump(bool isDoubleJump)
 	{
 		animator.SetTrigger(isDoubleJump ? "doubleJump" : "jump");
 	}
 
-	// These methods trigger dash animations for forward and backward
 	public void TriggerDash(bool isForward)
 	{
 		if(isForward)
@@ -42,7 +39,6 @@ public class PlayerAnimationController : MonoBehaviour
 			animator.SetTrigger("dashBackward");
 	}
 
-	// These methods trigger dodge roll animations for forward and backward
 	public void TriggerDodgeRoll(bool isForward)
 	{
 		if (isForward)
@@ -51,15 +47,49 @@ public class PlayerAnimationController : MonoBehaviour
 			animator.SetTrigger("dodgeRollBackward");
 	}
 
-	// Trigger attack animation based on combo step, playing a state repeatedly
 	public void TriggerAttack(AttackInfo attackInfo)
 	{
-		// Ensure the attack state corresponds to the combo step
 		string attackStateName = attackInfo.attackId;
-		// Crossfade to the desired attack state in the FullBodyCombat layer (layer index 1)
 		animator.CrossFadeInFixedTime(attackStateName, 0.1f, fullBodyLayerIndex);
 	}
-
+	
+	public void SwitchWeapon(WeaponData data)
+	{
+		if (animator.runtimeAnimatorController != data.animatorController)
+		{
+			animator.runtimeAnimatorController = data.animatorController;
+		}
+		foreach (GameObject obj in swordShieldObjects)
+		{
+			obj.SetActive(false);
+		}
+		foreach (GameObject obj in wandObjects)
+		{
+			obj.SetActive(false);
+		}
+		foreach (GameObject obj in greatSwordObjects)
+		{
+			obj.SetActive(false);
+		}
+		Sequence sequence = DOTween.Sequence()
+			.AppendInterval(0.55f)
+			.AppendCallback(() =>
+			{
+				foreach (GameObject obj in swordShieldObjects)
+				{
+					obj.SetActive(data.weaponType == WeaponType.SwordShield);
+				}
+				foreach (GameObject obj in wandObjects)
+				{
+					obj.SetActive(data.weaponType == WeaponType.Wand);
+				}
+				foreach (GameObject obj in greatSwordObjects)
+				{
+					obj.SetActive(data.weaponType == WeaponType.GreatSword);
+				}
+			});
+		animator.CrossFadeInFixedTime("SwitchWeapon", 0.1f, upperBodyLayerIndex);
+	}
 
 	public void TriggerHit()
 	{
