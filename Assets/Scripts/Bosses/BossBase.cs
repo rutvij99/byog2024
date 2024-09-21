@@ -2,12 +2,30 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AYellowpaper.SerializedCollections;
 using NUnit.Framework;
+using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Bosses
 {
+
+    [System.Serializable]
+    public class ActionSet
+    {
+        public List<BossAction> LongRange;
+        public List<BossAction> CloseRange;
+        public float MaxBossClosedRangeDist;
+        public ActionSet()
+        {
+            MaxBossClosedRangeDist = 0;
+            LongRange = new List<BossAction>();
+            CloseRange = new List<BossAction>();
+        }
+    }
+    
     [RequireComponent(typeof(Entity.Entity))]
     [RequireComponent(typeof(Rigidbody))]
     public class BossBase : MonoBehaviour
@@ -21,34 +39,65 @@ namespace Bosses
         [SerializeField] private float afterAttackWait;
         [SerializeField] private float afterAttackWaitDeviation;
         
+        
         private BossTarget enemyTarget;
 
         public AnimationClip IdleClip => idleClip;
         private Animator animator;
-        
+
         protected List<BossAction> availableBossActions;
-        protected List<BossAction> longRangedActions;
-        protected List<BossAction> closedRangeActions;
+        protected SerializedDictionary<ActionStage,ActionSet> bossActions;
+        
         protected BossAction currAction;
         
         protected float MaxBossClosedRangeDist { get; private set; }
         protected virtual void Start()
         {
+            bossActions = new SerializedDictionary<ActionStage, ActionSet>();
             availableBossActions = GetComponents<BossAction>().ToList();
             availableBossActions.RemoveAll(a => !a.enabled);
-            closedRangeActions = new List<BossAction>();
-            longRangedActions = new List<BossAction>();
-            MaxBossClosedRangeDist = 0;
             foreach (var action in availableBossActions)
             {
-                if (action.IsCloseRanged)
+                
+                if ((action.ValidStage & ActionStage.Stage1) != ActionStage.None)
                 {
-                    closedRangeActions.Add(action);
-                    if (MaxBossClosedRangeDist < action.MaxDist)
-                        MaxBossClosedRangeDist = action.MaxDist;
+                    var stage = ActionStage.Stage1;
+                    
+                    if(!bossActions.ContainsKey(stage))
+                        bossActions.Add(stage, new ActionSet());
+
+                    if (action.IsCloseRanged)
+                    {
+                        bossActions[stage].CloseRange.Add(action);
+                        if (bossActions[stage].MaxBossClosedRangeDist < action.MaxDist)
+                            bossActions[stage].MaxBossClosedRangeDist = action.MaxDist;
+                    }
+                    else
+                    {
+                        bossActions[stage].LongRange.Add(action);
+                    }
                 }
-                else
-                    longRangedActions.Add(action);
+                
+                if ((action.ValidStage & ActionStage.Stage2) != ActionStage.None)
+                {
+                    var stage = ActionStage.Stage2;
+                    
+                    if(!bossActions.ContainsKey(stage))
+                        bossActions.Add(stage, new ActionSet());
+
+                    if (action.IsCloseRanged)
+                    {
+                        bossActions[stage].CloseRange.Add(action);
+                        if (bossActions[stage].MaxBossClosedRangeDist < action.MaxDist)
+                            bossActions[stage].MaxBossClosedRangeDist = action.MaxDist;
+                    }
+                    else
+                    {
+                        bossActions[stage].LongRange.Add(action);
+                    }
+                }
+                    
+                
             }
             animator = GetComponentInChildren<Animator>();
             animator.Play(idleClip.name, 0);

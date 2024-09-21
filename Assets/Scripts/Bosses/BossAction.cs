@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,9 +10,19 @@ namespace Bosses
         OnGoing,
         Completed
     }
+
+    [Flags]
+    public enum ActionStage : int
+    {
+        None = 0,
+        Stage1 = 1,
+        Stage2 = 2
+    }
     
     public abstract class BossAction : MonoBehaviour
     {
+        public ActionStage ValidStage = ActionStage.Stage1;
+        
         public ActionState State { get; private set; }
         public System.Action OnComplete;
 

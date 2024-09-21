@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cab72c649a9448089065cb9d15b0a5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ValidStage: -1
   closeRange: 0
   maxDist: 999
   damage: 30
@@ -296,6 +297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd4c827dc9c41139c6acc784e8ea4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ValidStage: -1
   closeRange: 1
   maxDist: 1.15
   damage: 10
@@ -314,6 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd4c827dc9c41139c6acc784e8ea4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ValidStage: -1
   closeRange: 1
   maxDist: 3.15
   damage: 15
@@ -332,6 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b10e19f4a040fe90b5e12371264da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ValidStage: -1
   closeRange: 0
   maxDist: 999
   launchDelay: 0.75
@@ -352,6 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b10e19f4a040fe90b5e12371264da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ValidStage: 2
   closeRange: 0
   maxDist: 999
   launchDelay: 0.75
@@ -372,6 +377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c3d7af6f99848bea0ccfe2c865066ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ValidStage: 2
   closeRange: 0
   maxDist: 999
   damage: 0
