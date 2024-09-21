@@ -558,6 +558,7 @@ GameObject:
   - component: {fileID: 8094421190226603900}
   - component: {fileID: 7882954638891249302}
   - component: {fileID: 3378875220196623795}
+  - component: {fileID: 5970703386738531178}
   m_Layer: 0
   m_Name: BlackKnight
   m_TagString: Untagged
@@ -801,6 +802,18 @@ MonoBehaviour:
   intialDamageOffset: 2
   areaDamageOffset: 5
   areaDamageFx: {fileID: 1176189220239764545, guid: e80b0863a876ad548a31550ecb871748, type: 3}
+--- !u!114 &5970703386738531178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4680342342293872105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b9168492871d4a85a7d1d8a9e780f4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5550236011225530996
 GameObject:
   m_ObjectHideFlags: 0

@@ -80,6 +80,7 @@ GameObject:
   - component: {fileID: 8960900292354492827}
   - component: {fileID: 4697844835595396394}
   - component: {fileID: 8894693090750653913}
+  - component: {fileID: -5590000176973752560}
   m_Layer: 0
   m_Name: SnakeBoss
   m_TagString: Untagged
@@ -300,6 +301,18 @@ MonoBehaviour:
   offsetMult: 5.5
   damagerPrefab: {fileID: 1385558879245120054, guid: a49721338c8ef8d4d97b261185a534aa, type: 3}
   lightningFx: {fileID: 743717934227877733, guid: 14bb95870f1fa2243a12c5262012d10e, type: 3}
+--- !u!114 &-5590000176973752560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3338812865450884216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b9168492871d4a85a7d1d8a9e780f4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4464304556831846326
 GameObject:
   m_ObjectHideFlags: 0
