@@ -2,12 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
     // Forward lock variables
+    [Header("Target Locking")]
+    public CinemachineTargetGroup tg;
+    public PlayerTarget currentTarget;
     public bool isTargetLockEnabled = false; // Toggle for forward locking mode
     
     [Header("Movement")]
@@ -47,8 +51,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float stunChance = 0.3f;       // Probability of getting stunned (30% chance)
     [SerializeField] private float invulnerabilityTime = 1.0f; // Time during which player can't get hit after taking damage
     [SerializeField] private float stunnedInvulnerabilityTime = 1.0f; // Time during which player can't get hit after taking damage
-    
-    
+    [SerializeField] private float pushBackForce = 5f; // Strength of the push-back force
+    [SerializeField] private float pushBackDuration = 0.2f;  // Duration of the push-back effect
     
     private Rigidbody _rb;
     private PlayerStats _playerStats;
@@ -97,7 +101,6 @@ public class PlayerController : MonoBehaviour
     public bool IsInvulnerable { get; private set; } = false;
 
     public bool IsBlocking { get; private set; } = false;
-    
 
     private void Awake()
     {
@@ -132,7 +135,33 @@ public class PlayerController : MonoBehaviour
             dodgeInput = true;
         if (Input.GetKeyDown(KeyCode.Mouse0))  // Left mouse button for attack
             attackInput = true;
-        blockInput = Input.GetKey(KeyCode.Q);
+        blockInput = Input.GetKey(KeyCode.Mouse1);
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            TryLockTarget();
+        }
+    }
+
+    public void TryLockTarget()
+    {
+        isTargetLockEnabled = !isTargetLockEnabled;
+        if (!isTargetLockEnabled)
+        {
+            if (currentTarget != null)
+            {
+                tg.RemoveMember(currentTarget.transform);
+                currentTarget.SetLock(false);
+            }
+            return;
+        }
+        // find target
+        if (currentTarget == null)
+        {
+            isTargetLockEnabled = false;
+        }
+
+        tg.AddMember(currentTarget.transform, 1, 0.5f);
+        currentTarget.SetLock(true);
     }
 
     private void ResetInputs()
@@ -208,6 +237,8 @@ public class PlayerController : MonoBehaviour
         
         if (isTargetLockEnabled)
         {
+            // Rotate the player to face the current target
+            RotateTowardsTarget();
             // Forward lock: move forward/backward but always face right
             HandleMoveWithLock(speed, animationState);
         }
@@ -309,13 +340,22 @@ public class PlayerController : MonoBehaviour
             {
                 if (moveInput == 0)
                 {
-                    moveInput = -1; // Default to forward dodge if no input
+                    moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
                 }
-
-                if (moveInput >= 0) // Forward dash
-                    StartCoroutine(Dash(Vector3.right, true));
-                else // Backward dash
-                    StartCoroutine(Dash(Vector3.left, false));
+                if (isFacingRight)
+                {
+                    if (moveInput >= 0) // Forward dash
+                        StartCoroutine(Dash(Vector3.right, true));
+                    else // Backward dash
+                        StartCoroutine(Dash(Vector3.left, false));
+                }
+                else
+                {
+                    if (moveInput >= 0) // Forward dodge roll
+                        StartCoroutine(Dash(Vector3.right, false));
+                    else // Backward dodge roll
+                        StartCoroutine(Dash(Vector3.left, true));
+                }
             }
             else
             {
@@ -347,13 +387,22 @@ public class PlayerController : MonoBehaviour
             {
                 if (moveInput == 0)
                 {
-                    moveInput = -1; // Default to forward dodge if no input
+                    moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
                 }
-
-                if (moveInput >= 0) // Forward dodge roll
-                    StartCoroutine(DodgeRoll(Vector3.right, true));
-                else // Backward dodge roll
-                    StartCoroutine(DodgeRoll(Vector3.left, false));
+                if (isFacingRight)
+                {
+                    if (moveInput >= 0) // Forward dodge roll
+                        StartCoroutine(DodgeRoll(Vector3.right, true));
+                    else // Backward dodge roll
+                        StartCoroutine(DodgeRoll(Vector3.left, false));
+                }
+                else
+                {
+                    if (moveInput >= 0) // Forward dodge roll
+                        StartCoroutine(DodgeRoll(Vector3.right, false));
+                    else // Backward dodge roll
+                        StartCoroutine(DodgeRoll(Vector3.left, true));
+                }
             }
             else
             {
@@ -471,7 +520,18 @@ public class PlayerController : MonoBehaviour
     {
         Hit(10, true);
     }
-    
+    [Button]
+    public void TestHitPushback()
+    {
+        Hit(10, hitter: currentTarget.transform);
+    }
+
+    [Button]
+    public void TestHitPushbackStun()
+    {
+        Hit(10, true, currentTarget.transform);
+    }
+
     
     // todo add push back on hit if too much damage
     public void Hit(int damage, bool forceStun = false, Transform hitter = null)
@@ -485,19 +545,50 @@ public class PlayerController : MonoBehaviour
             _animController.TriggerDeath();
             return;
         }
-        if (UnityEngine.Random.value < stunChance || forceStun)
+        // Apply push-back force if hitter exists
+        var isStunned = UnityEngine.Random.value < stunChance || forceStun;
+        if (hitter != null)
+        {
+            ApplyPushBack(hitter, isStunned);
+        }
+        if (isStunned)
         {
             StunPlayer();
         }
         _animController.TriggerHit();
         if(!IsStunned) HandleInvulnerability();
     }
+    
+    private void ApplyPushBack(Transform hitter, bool actualStun)
+    {
+        // temp stun for pushback
+        IsStunned = true;
+        // Calculate the direction away from the hitter
+        Vector3 directionAwayFromHitter = (transform.position - hitter.position).normalized;
+        Debug.Log($"Pushing back to player {directionAwayFromHitter * pushBackForce}");
+        // Set the velocity directly for a more precise push-back
+        _rb.linearVelocity = directionAwayFromHitter * pushBackForce;
+
+        // Optionally, stop the push-back after a short duration to prevent continuous sliding
+        StartCoroutine(StopPushBackAfterDelay(actualStun));
+    }
+
+    private IEnumerator StopPushBackAfterDelay( bool actualStun)
+    {
+        yield return new WaitForSeconds(pushBackDuration);
+
+        if (!actualStun)
+        {
+            IsStunned = false;
+        }
+        _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);  // Only stop horizontal movement, retain vertical velocity
+    }
 
     private void StunPlayer()
     {
         Debug.Log("Player is stunned!");
         IsStunned = true;
-        _animController.SetStun(true);
+        _animController.SetStun(IsStunned);
         StartCoroutine(StunPlayerRoutine());
     }
 
@@ -507,7 +598,7 @@ public class PlayerController : MonoBehaviour
         IsStunned = false;
         Debug.Log("Player recovered from stun.");
         HandleInvulnerability(true);
-        _animController.SetStun(false);
+        _animController.SetStun(IsStunned);
     }
 
     private void HandleInvulnerability(bool useStunIFramesTime = false)
@@ -526,6 +617,25 @@ public class PlayerController : MonoBehaviour
     #endregion
     
     
+    
+    private void RotateTowardsTarget()
+    {
+        if (currentTarget == null) return;
+
+        // Check if the target is on the left or right of the player
+        Vector3 directionToTarget = currentTarget.transform.position - transform.position;
+
+        // If target is to the right, face 90° (right)
+        if (directionToTarget.x > 0)
+        {
+            RotateToDirection(true); // Face right (90°)
+        }
+        // If target is to the left, face -90° (left)
+        else if (directionToTarget.x < 0)
+        {
+            RotateToDirection(false); // Face left (-90°)
+        }
+    }
 
     
     private void RotateToDirection(bool faceRight)
