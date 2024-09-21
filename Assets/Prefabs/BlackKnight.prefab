@@ -639,7 +639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SFXClips: {fileID: 11400000, guid: 5e890b2fccf4c224fa8d3d665766e0b7, type: 2}
-  autoActivate: 1
+  autoActivate: 0
   bossMusicClip: {fileID: 8300000, guid: ab6df97753bcf544688118b92968f240, type: 3}
   idleClip: {fileID: 7400000, guid: cbb70a672a8f465781b46f2afa6db54e, type: 3}
   deathClip: {fileID: 7400000, guid: 018fb3fd36104c808dece5b4ebd9373a, type: 3}

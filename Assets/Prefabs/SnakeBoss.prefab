@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SFXClips: {fileID: 11400000, guid: 5e890b2fccf4c224fa8d3d665766e0b7, type: 2}
-  autoActivate: 1
+  autoActivate: 0
   bossMusicClip: {fileID: 8300000, guid: ce83892906df9e64f97cc60f2da1e1db, type: 3}
   idleClip: {fileID: 7400000, guid: 269838cb21454a68acd4bed3450a774b, type: 3}
   deathClip: {fileID: 7400000, guid: 2f7f0c8fa59e4c52bb9e68074a335a05, type: 3}
