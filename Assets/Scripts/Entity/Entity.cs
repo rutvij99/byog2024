@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,6 +18,8 @@ namespace Entity
         public System.Action OnEntityDamaged;
 
         private Healthbar healthbar;
+
+        [SerializeField] private bool testDamage;
         
         IEnumerator Start()
         {
@@ -33,10 +36,22 @@ namespace Entity
             }
         }
 
+        private void Update()
+        {
+            if (testDamage)
+            {
+                testDamage = false;
+                TakeDamage(10);
+            }
+        }
+
         public void TakeDamage(int dmg)
         {
             CurrHealth -= dmg;
-            healthbar.UpdateHealth((float)CurrHealth/DataAsset.MaxHealth);
+            if (CurrHealth <= 0)
+                CurrHealth = 0;
+            
+            healthbar?.UpdateHealth((float)CurrHealth/DataAsset.MaxHealth);
             OnEntityDamaged?.Invoke();
             if (CurrHealth <= 0)
             {

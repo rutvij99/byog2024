@@ -12,22 +12,6 @@ namespace Bosses.Common
             coll = GetComponent<BoxCollider>();
         }
         
-        public override void DealDamage(int damage)
-        {
-            base.DealDamage(damage);
-            var all = Physics.OverlapBox(coll.bounds.center, coll.bounds.extents, transform.rotation);
-            foreach (Collider col in all)
-            {
-                var bt = col.GetComponentInParent<BossTarget>();
-                if ( bt != null)
-                {
-                    var entity = bt.GetComponent<Entity.Entity>();
-                    if(entity)
-                        entity.TakeDamage(damage);
-                }
-            }
-        }
-        
         private void OnDrawGizmos()
         {
             if (coll == null)

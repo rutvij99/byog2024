@@ -5,22 +5,20 @@ namespace Bosses
     public class SnakeBoss : BossBase
     {
         [SerializeField] private float stageChangeHealthVal;
-
-        private Entity.Entity entity;
+        
         private int stage = 1;
         
         protected override void Start()
         {
             base.Start();
-            entity = GetComponent<Entity.Entity>();
             entity.OnEntityDamaged += OnDamaged;
         }
 
         private void OnDamaged()
         {
-            if (entity.CurrHealth <= stageChangeHealthVal)
+            if (entity.CurrHealth <= stageChangeHealthVal && stage == 1)
             {
-                stage++;
+                stage=2;
             }
         }
         

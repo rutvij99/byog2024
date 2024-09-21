@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
+using Bosses.Common;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
@@ -34,11 +35,13 @@ namespace Bosses
         
         [SerializeField] private AudioClip bossMusicClip;
         [SerializeField] private AnimationClip idleClip;
+        [SerializeField] private AnimationClip deathClip;
+        [SerializeField] private GameObject deathCam;
+        
         [SerializeField] private float initialWait;
         
         [SerializeField] private float afterAttackWait;
         [SerializeField] private float afterAttackWaitDeviation;
-        
         
         private BossTarget enemyTarget;
 
@@ -49,16 +52,18 @@ namespace Bosses
         protected SerializedDictionary<ActionStage,ActionSet> bossActions;
         
         protected BossAction currAction;
-        
+        protected Coroutine currentActiveActionRoutine;
+        protected Entity.Entity entity;
+
         protected float MaxBossClosedRangeDist { get; private set; }
         protected virtual void Start()
         {
+            entity = GetComponent<Entity.Entity>();
             bossActions = new SerializedDictionary<ActionStage, ActionSet>();
             availableBossActions = GetComponents<BossAction>().ToList();
             availableBossActions.RemoveAll(a => !a.enabled);
             foreach (var action in availableBossActions)
             {
-                
                 if ((action.ValidStage & ActionStage.Stage1) != ActionStage.None)
                 {
                     var stage = ActionStage.Stage1;
@@ -99,8 +104,10 @@ namespace Bosses
                     
                 
             }
+
+            GetComponent<Entity.Entity>().OnEntityDamaged += OnHealthDeplete;
             animator = GetComponentInChildren<Animator>();
-            animator.Play(idleClip.name, 0);
+            PlayIdleAnimation();
             
             if(autoActivate)
                 ActivateBoss();
@@ -119,9 +126,12 @@ namespace Bosses
             DecideAction();
         }
         
-        private void NextAttack()
+        protected void NextAttack()
         {
-            StartCoroutine(NextActionRoutine());
+            if(currentActiveActionRoutine != null)
+                StopCoroutine(currentActiveActionRoutine);
+                
+            currentActiveActionRoutine = StartCoroutine(NextActionRoutine());
         }
         
         IEnumerator NextActionRoutine()
@@ -150,14 +160,72 @@ namespace Bosses
             
             LookAtEnemy();
             currAction = ChooseAction();
-            currAction.OnComplete += NextAttack;
-            currAction.DoAction();
+            if (currAction != null)
+            {
+                currAction.OnComplete += NextAttack;
+                currAction.DoAction();
+            }
         }
 
         protected virtual BossAction ChooseAction()
         {
             // default behaviour, choose random ones.
             return availableBossActions[Random.Range(0, availableBossActions.Count)];
+        }
+        
+        protected void PlayAnimationClip(AnimationClip clip, float speed=1)
+        {
+            animator.speed = speed;
+            animator.CrossFade(clip.name, normalizedTransitionDuration:0.15f);
+        }
+
+        protected void PlayIdleAnimation()
+        {
+            PlayAnimationClip(idleClip);
+        }
+
+        private void OnHealthDeplete()
+        {
+            if (entity.CurrHealth > 0)
+                return ;
+            StartCoroutine(DeathRoutine());
+            
+            if(deathCam)
+                StartCoroutine(DeathCamRoutine());
+        }
+
+        IEnumerator DeathRoutine()
+        {
+            if(currentActiveActionRoutine != null)
+                StopCoroutine(currentActiveActionRoutine);
+
+            entity.OnEntityDamaged -= OnHealthDeplete;
+            if(currAction)
+                currAction.OnComplete -= NextAttack;
+
+            for (int i = 0; i < availableBossActions.Count; i++)
+            {
+                Destroy(availableBossActions[i]);
+            }
+
+            foreach (var dealer in GetComponentsInChildren<BossDamageDealer>())
+            {
+                dealer.enabled = false;
+            }
+            
+            currentActiveActionRoutine = null;
+            PlayAnimationClip(deathClip);
+            yield return new WaitForSeconds(deathClip.length);
+            Destroy(this.gameObject, 3f);
+        }
+        
+        IEnumerator DeathCamRoutine()
+        {
+            deathCam.SetActive(true);
+            yield return 0.15f;
+            Time.timeScale = 0.1f;
+            yield return new WaitForSecondsRealtime(5);
+            Time.timeScale = 1;
         }
     }
 }

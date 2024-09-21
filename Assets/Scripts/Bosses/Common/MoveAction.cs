@@ -6,6 +6,9 @@ namespace Bosses.Common
     public class MoveAction : BossAction
     {
         [SerializeField] 
+        private float stoppingDist = 3;
+        
+        [SerializeField] 
         private AnimationClip moveAnim;
         
         [SerializeField]
@@ -15,15 +18,19 @@ namespace Bosses.Common
         
         protected override IEnumerator StartActionRoutine()
         {
-            yield return new WaitForSeconds(timeBeforeAction);
+            if(timeBeforeAction > 0)
+                yield return new WaitForSeconds(timeBeforeAction);
+            
             var target = BossTarget.Target;
             var targetPos = Vector3.zero;
+            float dist = Vector3.Distance(transform.position, target.transform.position) - stoppingDist;
+            
             if (target)
             {
-                targetPos = target.transform.position;
+                targetPos = (target.transform.position - transform.position).normalized * dist;
+                targetPos.y = transform.position.y;
             }
-
-            float dist = Vector3.Distance(transform.position, targetPos);
+            
             if(dist <= 0.01f)
                 yield break;
             
@@ -35,6 +42,11 @@ namespace Bosses.Common
             while(step <= 1)
             {
                 step += Time.deltaTime / dur;
+                dist = Vector3.Distance(transform.position, target.transform.position) - stoppingDist;
+                if (dist <= stoppingDist)
+                {
+                    break;
+                }
                 transform.position = Vector3.Lerp(transform.position, targetPos, step);
                 yield return new WaitForEndOfFrame();
             }
