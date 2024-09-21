@@ -18,7 +18,8 @@ public class PlayerController : MonoBehaviour
     [FormerlySerializedAs("tg")] public CinemachineTargetGroup cinemachineTargetGroup;
     public PlayerTarget currentTarget;
     public bool isTargetLockEnabled = false; // Toggle for forward locking mode
-    
+    [SerializeField] private float maxTargetDistance = 25f; // Maximum distance to search for targets
+
     [Header("Movement")]
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 8f;
@@ -204,14 +205,42 @@ public class PlayerController : MonoBehaviour
             }
             return;
         }
+        // Find the closest target
+        PlayerTarget closestTarget = FindClosestTarget();
         // find target
-        if (currentTarget == null)
+        if (closestTarget == null)
         {
             isTargetLockEnabled = false;
+            return;
         }
-
+        currentTarget = closestTarget;
         cinemachineTargetGroup.AddMember(currentTarget.transform, 1, 0.5f);
         currentTarget.SetLock(true);
+    }
+    
+    private PlayerTarget FindClosestTarget()
+    {
+        PlayerTarget closestTarget = null;
+        float closestDistanceSqr = Mathf.Infinity;
+
+        // Assuming you have a way to get a list of all potential targets, like:
+        PlayerTarget[] allTargets = FindObjectsOfType<PlayerTarget>(); 
+
+        foreach (var target in allTargets)
+        {
+            // Calculate the squared distance (to avoid unnecessary square roots)
+            float distanceSqr = (target.transform.position - transform.position).sqrMagnitude;
+
+            // Check if the target is within the max distance and closer than the previous closest target
+            Debug.Log($"{target} - {distanceSqr} -> {maxTargetDistance * maxTargetDistance}");
+            if (distanceSqr < closestDistanceSqr && distanceSqr <= maxTargetDistance * maxTargetDistance)
+            {
+                closestTarget = target;
+                closestDistanceSqr = distanceSqr;
+            }
+        }
+
+        return closestTarget;
     }
 
     private void ResetInputs()
