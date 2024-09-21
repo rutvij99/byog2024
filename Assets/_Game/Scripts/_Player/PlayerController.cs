@@ -6,9 +6,12 @@ using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private Transform headTransform;
+    
     // Forward lock variables
     [Header("Target Locking")]
     [FormerlySerializedAs("tg")] public CinemachineTargetGroup cinemachineTargetGroup;
@@ -43,9 +46,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundCheckRadius = 0.2f;
 
     [Header("Attack")]
-    [SerializeField] private float attackCooldown = 0.3f;  // Time between attacks
-    [SerializeField] private int maxComboCount = 3;        // Maximum combo chain
-    [SerializeField] private float comboResetTime = 1.0f;  // Time to reset combo if no new attack
+    [SerializeField] private float[] attackTimes = new float[5];  // Time of each attack in the combo
+    [SerializeField] private float comboAllowedTime = 0.3f;  // Time between attacks
     
     [Header("Hit/Recoil")]
     [SerializeField] private float stunDuration = 1.5f;     // Duration of stun when player is stunned
@@ -64,7 +66,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rb;
     private PlayerStats _playerStats;
     private PlayerAnimationController _animController;
-
+    private Collider _collider;
+    
     // Internal variables
     private bool isFacingRight = true;
     private float coyoteTimer = 0f;
@@ -74,6 +77,7 @@ public class PlayerController : MonoBehaviour
     private float lastDodge = -1f;
 
     // Attack variables
+    private bool isComboActive = false;  // True when the player is in an active combo
     private int comboStep = 0;             // Current attack step in combo
     private float lastAttackTime = 0f;     // Tracks the last time an attack occurred
     private float comboResetTimer = 0f;    // Timer for resetting the combo if no further attacks
@@ -87,7 +91,7 @@ public class PlayerController : MonoBehaviour
     private bool jumpInput;
     private bool dashInput;
     private bool dodgeInput;
-    private bool attackInput;
+    private bool lightAttackInput;
     private bool blockInput;
     private bool targetLockInput;
 
@@ -110,6 +114,7 @@ public class PlayerController : MonoBehaviour
     
     private void Awake()
     {
+        _collider = GetComponent<Collider>();
         _rb = GetComponent<Rigidbody>();
         _playerStats = GetComponent<PlayerStats>();
         _animController = GetComponent<PlayerAnimationController>(); // Reference the animation controller
@@ -139,7 +144,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftAlt))
             dodgeInput = true;
         if (Input.GetKeyDown(KeyCode.Mouse0))  // Left mouse button for attack
-            attackInput = true;
+            lightAttackInput = true;
         blockInput = Input.GetKey(KeyCode.Mouse1);
         if (Input.GetKeyDown(KeyCode.Q))
             targetLockInput = true;
@@ -174,7 +179,7 @@ public class PlayerController : MonoBehaviour
         jumpInput = false;
         dashInput = false;
         dodgeInput = false;
-        attackInput = false;
+        lightAttackInput = false;
         blockInput = false;
         targetLockInput = false;
     }
@@ -197,6 +202,29 @@ public class PlayerController : MonoBehaviour
             coyoteTimer -= Time.deltaTime;
         }
     }
+    
+    private bool IsBlockedInDirection(float moveInput)
+    {
+        Vector3 direction;
+        if (isTargetLockEnabled)
+        {
+            direction = moveInput > 0 ? transform.forward : -transform.forward;
+        }
+        else
+        {
+            direction = isFacingRight ? Vector3.right : Vector3.left;
+        }
+        Vector3 boxHalfExtents = new Vector3(_collider.bounds.extents.x, _collider.bounds.extents.y / 3, 0.1f);  // Adjust the depth (Z) as needed
+
+        // Perform a Boxcast in the direction of movement
+        RaycastHit hit;
+        if (Physics.BoxCast(headTransform.position + new Vector3(0,0,0.5f), boxHalfExtents, direction, out hit, transform.rotation, 0.1f, groundLayer))
+        {
+            Debug.Log("Blocked by: " + hit.collider.name);
+            return true;  // There's something blocking the player's movement
+        }
+        return false;
+    }
 
     private void FixedUpdate()
     {
@@ -212,7 +240,7 @@ public class PlayerController : MonoBehaviour
         HandleDash();
         HandleDodgeRoll();
         HandleBlock();
-        HandleAttack();
+        HandleLightAttack();
         ResetInputs();
     }
 
@@ -234,7 +262,13 @@ public class PlayerController : MonoBehaviour
         }
         float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
         int animationState = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
-        
+
+        // if (!IsGrounded && IsBlockedInDirection(moveInput))
+        // {
+        //     SetIdle();
+        //     return;
+        // }
+
         if (isTargetLockEnabled)
         {
             RotateTowardsTarget();
@@ -251,7 +285,10 @@ public class PlayerController : MonoBehaviour
     private void HandleMoveWithLock(float speed, int animationState)
     {
         float direction = moveInput < 0 ? -1f : 1f;
-        _animController.SetMovement(moveInput < 0 ? -1f : animationState); // Backward or Running/Walking forward
+        if (isFacingRight)
+            _animController.SetMovement(moveInput < 0 ? -1f : animationState); // Backward or Running/Walking forward
+        else
+            _animController.SetMovement(moveInput > 0 ? -1f : animationState); // Backward or Running/Walking forward
         _rb.linearVelocity = new Vector3(direction * speed, _rb.linearVelocity.y, 0);
     }
 
@@ -474,61 +511,70 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Attack
-    private Coroutine attackResetter;
-    private void HandleAttack()
+    private void HandleAttacks()
     {
-        if (attackInput && !IsAttacking)
+        if (!CanChangeState()) return;
+        if (!IsGrounded)
         {
-            if(!CanChangeState()) return;
+            HandleAirAttack();
+            return;
+        }
+        HandleLightAttack();
+    }
+
+    private void HandleAirAttack()
+    {
+        if (lightAttackInput)
+        {
+            comboStep = 1;
+            var currentAttakInfo = _playerStats.airAttacks[Random.Range(0, _playerStats.airAttacks.Count)];           
+            if(!_playerStats.IsAttackPossible(currentAttakInfo)) return;
+            _playerStats.AttackModifiers(currentAttakInfo);
             IsAttacking = true;
-            lastAttackTime = Time.time; // Track last attack time
-            
-            // Determine if we should start or continue the combo
-            if (comboStep == 0 || Time.time - comboResetTimer >= comboResetTime)
-            {
-                comboStep = 1; // Start the combo chain
-                Debug.Log($"Attack new -> combo reset: {comboStep} -> {Time.time - comboResetTimer}");
-            }
-            else if (comboStep < maxComboCount)
-            {
-                comboStep++; // Continue combo
-                Debug.Log($"Attack new -> combo continue: {comboStep}  -> {Time.time - comboResetTimer} >= {comboResetTime}");
-            }
-            else if(comboStep >= maxComboCount)
+            _animController.TriggerAttack(currentAttakInfo);
+            isComboActive = true;
+            StartCoroutine(HandleAttackRoutine(currentAttakInfo));
+        }
+    }
+    private void HandleLightAttack()
+    {
+        if (lightAttackInput)
+        {
+            if (!CanChangeState()) return;
+
+            // Check if it's a new combo or continuation of an existing combo
+            if (comboStep == 0 || Time.time - lastAttackTime >= comboAllowedTime || comboStep >= _playerStats.lightMeleeAttacks.Count)
             {
                 comboStep = 1;
-                Debug.Log($"Attack new -> combo reset 2: {comboStep} -> {Time.time - comboResetTimer}");
+                Debug.Log($"Combo reset: {comboStep}");
             }
-            // Trigger the appropriate attack animation based on the combo step
-            _animController.TriggerAttack(comboStep);
-
-            // Set a timer to reset the combo if no further attacks
-            comboResetTimer = Time.time;
-            // Delay before allowing another attack
-            if(attackResetter != null)
-                StopCoroutine(attackResetter);
-            attackResetter = StartCoroutine(EndAttackAfterDelay(attackCooldown));
+            else if (comboStep < _playerStats.lightMeleeAttacks.Count)
+            {
+                comboStep++;
+                Debug.Log($"Combo continued: {comboStep}");
+            }
+            var currentAttakInfo = _playerStats.lightMeleeAttacks[comboStep - 1];
+            
+            if(!_playerStats.IsAttackPossible(currentAttakInfo)) return;
+            _playerStats.AttackModifiers(currentAttakInfo);
+            IsAttacking = true;
+            _animController.TriggerAttack(currentAttakInfo);
+            isComboActive = true;
+            // Start a coroutine to manage the combo and cooldown for the current step
+            StartCoroutine(HandleAttackRoutine(currentAttakInfo));
         }
     }
-
-    private IEnumerator EndAttackAfterDelay(float delay)
+    private void HandleHeavyAttacks()
     {
-        // Debug.Log($"Attack almost done");
-        yield return new WaitForSeconds(delay);
         
-        yield return null;
-        IsAttacking = false;
-        _animController.ResetAttack();
-        attackResetter = null;
-        // Debug.Log($"Attack almost done; can reset {Time.time - comboResetTimer >= comboResetTime}? {Time.time - comboResetTimer} > {comboResetTime} seconds");
-        // If the combo timeout passes, reset the combo step
-        if (Time.time - comboResetTimer >= comboResetTime)
-        {
-            comboStep = 0; // Reset the combo
-            Debug.Log($"Attack Done -> combo reset: {comboStep}");
-        }
     }
-
+    
+    private IEnumerator HandleAttackRoutine(AttackInfo currentAttakInfo)
+    {
+        yield return new WaitForSeconds(currentAttakInfo.attackDuration);
+        lastAttackTime = Time.time;
+        IsAttacking = false;
+    }
     #endregion
     
     #region Get Hit Logic
@@ -622,16 +668,10 @@ public class PlayerController : MonoBehaviour
     #region Testing
     private void OnDrawGizmos()
     {
+        // Only draw the gizmo if the player controller is active
+        // if (!Application.isPlaying) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-
-        // Draw the push-back direction when hit
-        // if (currentTarget != null)
-        // {
-        //     Gizmos.color = Color.blue;
-        //     Vector3 direction = (transform.position - currentTarget.transform.position).normalized;
-        //     Gizmos.DrawRay(transform.position, direction * 2f); // Extend the ray for visualization
-        // }
     }
     
     [Button]

@@ -6,6 +6,8 @@ public class PlayerAnimationController : MonoBehaviour
 {
 	// Reference to the Animator component
 	[SerializeField] private Animator animator;
+	// The index of the full-body layer in the Animator
+	private int fullBodyLayerIndex = 2; // Set this to the correct index of your "FullBodyCombat" layer
 
 	void Start()
 	{
@@ -49,16 +51,13 @@ public class PlayerAnimationController : MonoBehaviour
 			animator.SetTrigger("dodgeRollBackward");
 	}
 
-	public void TriggerAttack(int comboStep)
+	// Trigger attack animation based on combo step, playing a state repeatedly
+	public void TriggerAttack(AttackInfo attackInfo)
 	{
-		animator.SetInteger("comboCounter", comboStep);
-		animator.SetTrigger("attack");
-		animator.SetBool("isAttacking", true);
-	}
-	public void ResetAttack()
-	{
-		animator.SetBool("isAttacking" , false);
-		// animator.SetInteger("comboCounter", 0);
+		// Ensure the attack state corresponds to the combo step
+		string attackStateName = attackInfo.attackId;
+		// Crossfade to the desired attack state in the FullBodyCombat layer (layer index 1)
+		animator.CrossFadeInFixedTime(attackStateName, 0.1f, fullBodyLayerIndex);
 	}
 
 

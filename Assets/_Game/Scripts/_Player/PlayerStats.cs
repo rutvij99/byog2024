@@ -1,6 +1,27 @@
 using System.Collections;
+using System.Collections.Generic;
 using NaughtyAttributes;
+using NUnit.Framework;
 using UnityEngine;
+
+[System.Serializable]
+public class AttackInfo
+{
+    public enum AttackType
+    {
+        Melee,
+        Range
+    }
+
+    public string attackId;
+    public AttackType type;
+    public float attackDuration;
+    public float staminaCost;
+    public float manaCost;
+    public float healthCost;
+    public float damage;
+    public float maxChargeMultiplier;
+}
 
 public class PlayerStats : MonoBehaviour
 {
@@ -40,6 +61,13 @@ public class PlayerStats : MonoBehaviour
     public float sprintCostPerSecond = 5f;
     public float sprintCostMultiplier = 0.4f;
 
+    
+    [Header("Attacks")]
+    public List<AttackInfo> airAttacks;
+    public List<AttackInfo> lightMeleeAttacks;
+    public List<AttackInfo> heavyMeleeAttacks;
+    public List<AttackInfo> rangeAttacks;
+    
     [Space(20)]
     [ReadOnly] public float healthRegenTimer = 0f;
     [ReadOnly] public float staminaRegenTimer = 0f;
@@ -93,7 +121,7 @@ public class PlayerStats : MonoBehaviour
     }
     
     #region Updaters
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (IsDead) return;
 
@@ -110,7 +138,7 @@ public class PlayerStats : MonoBehaviour
             healthRegenTimer = healthRegenDelay;
     }
 
-    public void Heal(int amount)
+    public void Heal(float amount)
     {
         currentHealth += amount;
         if (currentHealth > maxHealth)
@@ -130,7 +158,7 @@ public class PlayerStats : MonoBehaviour
             staminaRegenTimer = staminaRegenDelay;
     }
 
-    public void UseMana(int amount)
+    public void UseMana(float amount)
     {
         currentMana -= amount;
         if (currentMana < 0)
@@ -203,6 +231,18 @@ public class PlayerStats : MonoBehaviour
 
     #region Usages
 
+    public bool IsAttackPossible(AttackInfo attackInfo)
+    {
+        return attackInfo.healthCost <= currentHealth && attackInfo.staminaCost <= currentStamina && attackInfo.manaCost <= currentMana;
+    }
+    
+    public void AttackModifiers(AttackInfo attackInfo)
+    {
+        UseStamina(attackInfo.staminaCost);
+        UseMana(attackInfo.manaCost);
+        TakeDamage(attackInfo.healthCost);
+    }
+    
     public bool IsDashPossible()
     {
         return dashCost <= currentStamina;
