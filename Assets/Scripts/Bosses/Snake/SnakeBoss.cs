@@ -1,30 +1,53 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Bosses
 {
     public class SnakeBoss : BossBase
     {
-        [SerializeField] private float stageChangeHealthVal;
+        [SerializeField] private AnimationClip stageChangeAnim;
+        [SerializeField] private float stageChangeHealthVal=50;
+        [SerializeField] private GameObject stageChangeCamera;
         
         private int stage = 1;
+        private bool stageChangeQueued;
         
         protected override void Start()
         {
             base.Start();
             entity.OnEntityDamaged += OnDamaged;
         }
-
+        
         private void OnDamaged()
         {
             if (entity.CurrHealth <= stageChangeHealthVal && stage == 1)
             {
-                stage=2;
+                stage = 2;
+                stageChangeQueued = true;
             }
         }
         
         protected override BossAction ChooseAction()
         {
+            if (stageChangeQueued)
+            {
+                stageChangeQueued = false;
+                LookAtEnemy();
+                StartCoroutine(ChangeStage());
+                return null;
+            }
             return GetActions((ActionStage)stage);
+        }
+
+        IEnumerator ChangeStage()
+        {
+            yield return new WaitForSeconds(0.15f);
+            stageChangeCamera?.SetActive(true);
+            PlayAnimationClip(stageChangeAnim);
+            yield return new WaitForSeconds(stageChangeAnim.length);
+            stageChangeCamera?.SetActive(false);
+            PlayIdleAnimation();
+            NextAttack();
         }
 
         private BossAction GetActions(ActionStage actionStage)

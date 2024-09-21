@@ -42,6 +42,9 @@ namespace Bosses
         
         [SerializeField] private float afterAttackWait;
         [SerializeField] private float afterAttackWaitDeviation;
+
+        [SerializeField] private Vector3 soulOffset = Vector3.one;
+        [SerializeField] private GameObject soul;
         
         private BossTarget enemyTarget;
 
@@ -222,9 +225,14 @@ namespace Bosses
         IEnumerator DeathCamRoutine()
         {
             deathCam.SetActive(true);
-            yield return 0.15f;
+            yield return new WaitForSecondsRealtime(0.35f);
+            
+            if(soul)
+                Instantiate(soul, transform.position + soulOffset, Quaternion.identity);
+            
             Time.timeScale = 0.1f;
-            yield return new WaitForSecondsRealtime(5);
+            yield return new WaitForSecondsRealtime(2);
+            deathCam.SetActive(false);
             Time.timeScale = 1;
         }
     }

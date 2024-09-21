@@ -35,6 +35,7 @@ namespace Bosses
                 stageChangeQueued = false;
                 LookAtEnemy();
                 StartCoroutine(ChangeStage());
+                return null;
             }
             return GetActions((ActionStage)stage);
         }

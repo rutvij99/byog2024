@@ -1289,6 +1289,8 @@ MonoBehaviour:
   initialWait: 1
   afterAttackWait: 1
   afterAttackWaitDeviation: 0.25
+  soulOffset: {x: 0, y: 2.5, z: 0}
+  soul: {fileID: 8411123189498983111, guid: ce86a2d6f28e3664cacca2b8dcb50360, type: 3}
   stageChangeAnim: {fileID: 7400000, guid: c370c2efaefa4138b6aa8bc3cd31e7b0, type: 3}
   stageChangeHealthVal: 50
   stageChangeCamera: {fileID: 7895332749998473208}

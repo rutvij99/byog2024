@@ -27,7 +27,7 @@ namespace Bosses.Common
             
             if (target)
             {
-                targetPos = (target.transform.position - transform.position).normalized * dist;
+                targetPos = transform.position + (target.transform.position - transform.position).normalized * dist;
                 targetPos.y = transform.position.y;
             }
             
