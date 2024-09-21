@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Entity
 {
@@ -6,23 +8,37 @@ namespace Entity
     {
         [SerializeField] 
         private EntityDataAsset DataAsset;
+
+        [SerializeField] private GameObject HealthGUIPrefab;
         
-        private int currHealth;
+        public int CurrHealth { get; private set; }
 
         public System.Action OnEntityDeath;
         public System.Action OnEntityDamaged;
+
+        private Healthbar healthbar;
         
-        void Start()
+        IEnumerator Start()
         {
+            yield return new WaitForEndOfFrame();
+            
             if(DataAsset)
-                currHealth = DataAsset.MaxHealth;
+                CurrHealth = DataAsset.MaxHealth;
+
+            if (HealthGUIPrefab)
+            {
+                healthbar = Instantiate(HealthGUIPrefab).GetComponent<Healthbar>();
+                healthbar.UpdateHealth((float)CurrHealth/DataAsset.MaxHealth);
+                healthbar.SetTitle(DataAsset.EntityName);
+            }
         }
 
         public void TakeDamage(int dmg)
         {
-            currHealth -= dmg;
+            CurrHealth -= dmg;
+            healthbar.UpdateHealth((float)CurrHealth/DataAsset.MaxHealth);
             OnEntityDamaged?.Invoke();
-            if (currHealth <= 0)
+            if (CurrHealth <= 0)
             {
                 OnEntityDeath?.Invoke();
             }
