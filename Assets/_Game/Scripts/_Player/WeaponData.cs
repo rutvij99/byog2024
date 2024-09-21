@@ -13,4 +13,5 @@ public class WeaponData : ScriptableObject
     public float maxWalkSpeed;
     public float maxRunSpeed;
     public List<string> triggerObjs;
+    public GameObject projectilePrefab;
 }

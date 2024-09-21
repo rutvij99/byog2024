@@ -8,13 +8,15 @@ public class PlayerAnimationHelper : MonoBehaviour
 {
 	private PlayerStats playerStats;
 	private PlayerController _controller;
+	private PlayerAttackModule attackModule;
 
 	private List<Collider> _colliders = new List<Collider>();
 	private WeaponType currentType = WeaponType.None;
 	private void Start()
 	{
 		playerStats = this.transform.GetComponentInParent<PlayerStats>();
-		_controller = this.transform.root.GetComponentInParent<PlayerController>();
+		_controller = this.transform.GetComponentInParent<PlayerController>();
+		attackModule = this.transform.GetComponentInParent<PlayerAttackModule>();
 		currentType = playerStats.currentWeaponType;
 		foreach (var collider in _colliders)
 		{
@@ -50,6 +52,18 @@ public class PlayerAnimationHelper : MonoBehaviour
 		}
 	}
 
+	public void SpawnProjectile(string projectileSpawnPoint)
+	{
+		var pointMain = FindDeepChild(this.transform, projectileSpawnPoint);
+		var point = new GameObject();
+		point.transform.position = _controller.transform.position + new Vector3(0, 1f, 0);
+		if (pointMain != null)
+		{
+			point.transform.position = pointMain.transform.position;
+		}
+		
+		attackModule.SpawnProjectile(point);
+	}
 
 	public void EnableTrigger(string triggerName)
 	{

@@ -73,7 +73,6 @@ public class PlayerController : MonoBehaviour
     private Collider _collider;
     
     // Internal variables
-    private bool isFacingRight = true;
     private float coyoteTimer = 0f;
     
     // dash/dodge roll variables
@@ -103,6 +102,7 @@ public class PlayerController : MonoBehaviour
 
     
 
+    public bool IsFacingRight { get; private set; } = true;
     public bool IsGrounded { get; private set; }
     public bool CanDoubleJump { get; private set; }
     public bool IsDodging { get; private set; } = false;
@@ -111,11 +111,13 @@ public class PlayerController : MonoBehaviour
     public bool IsStunned { get; private set; } = false;
     public bool IsInvulnerable { get; private set; } = false;
     public bool IsBlocking { get; private set; } = false;
+    
+    public bool IsSwitchingWeapons { get; private set; } = false;
 
     
     private bool CanChangeState()
     {
-        return !IsDodging && !IsDashing && !IsAttacking && !IsStunned;
+        return !IsDodging && !IsDashing && !IsAttacking && !IsStunned && !IsSwitchingWeapons;
     }
     
     private void Awake()
@@ -139,6 +141,11 @@ public class PlayerController : MonoBehaviour
         CheckCayoteTimer();
         CheckInput();
         CheckLockTarget();
+        if (CanChangeState() && moveInput == 0)
+        {
+            // temp hack which doesn't seme to do much 
+            SetIdle();
+        }
     }
 
     private void CheckInput()
@@ -163,16 +170,24 @@ public class PlayerController : MonoBehaviour
             SwitchWeapon(WeaponType.Wand);
         else if (Input.GetKeyDown(KeyCode.Alpha3))
             SwitchWeapon(WeaponType.GreatSword);
-            
     }
 
     public void SwitchWeapon(WeaponType weaponType)
     {
+        if(!CanChangeState()) return;
         if(_playerStats.currentWeaponType == weaponType) return;
         _playerStats.SwitchWeapon(weaponType);
         walkSpeed = _playerStats.currentWeaponData.maxWalkSpeed;
         runSpeed = _playerStats.currentWeaponData.maxRunSpeed;
         _animController.SwitchWeapon(_playerStats.currentWeaponData);
+        StartCoroutine(SwitchWeaponRoutine());
+    }
+
+    private IEnumerator SwitchWeaponRoutine()
+    {
+        IsSwitchingWeapons = true;
+        yield return new WaitForSeconds(1f);
+        IsSwitchingWeapons = false;
     }
 
     public void CheckLockTarget()
@@ -238,7 +253,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            direction = isFacingRight ? Vector3.right : Vector3.left;
+            direction = IsFacingRight ? Vector3.right : Vector3.left;
         }
         Vector3 boxHalfExtents = new Vector3(_collider.bounds.extents.x, _collider.bounds.extents.y / 3, 0.1f);  // Adjust the depth (Z) as needed
 
@@ -312,7 +327,7 @@ public class PlayerController : MonoBehaviour
     private void HandleMoveWithLock(float speed, int animationState)
     {
         float direction = moveInput < 0 ? -1f : 1f;
-        if (isFacingRight)
+        if (IsFacingRight)
             _animController.SetMovement(moveInput < 0 ? -1f : animationState); // Backward or Running/Walking forward
         else
             _animController.SetMovement(moveInput > 0 ? -1f : animationState); // Backward or Running/Walking forward
@@ -350,11 +365,11 @@ public class PlayerController : MonoBehaviour
 
     private void RotateBaseOnInput(bool isMovingBackward)
     {
-        if (isMovingBackward && isFacingRight)
+        if (isMovingBackward && IsFacingRight)
         {
             RotateToDirection(false); // Face left (-90°)
         }
-        else if (!isMovingBackward && !isFacingRight)
+        else if (!isMovingBackward && !IsFacingRight)
         {
             RotateToDirection(true); // Face right (90°)
         }
@@ -362,7 +377,7 @@ public class PlayerController : MonoBehaviour
     
     private void RotateToDirection(bool faceRight)
     {
-        isFacingRight = faceRight;
+        IsFacingRight = faceRight;
         transform.rotation = Quaternion.Euler(0, faceRight ? 90 : -90, 0);
     }
     #endregion
@@ -427,9 +442,9 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInput == 0)
             {
-                moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
+                moveInput = IsFacingRight? -1 : 1; // Default to forward dodge if no input
             }
-            if (isFacingRight)
+            if (IsFacingRight)
             {
                 if (moveInput >= 0) // Forward dash
                     StartCoroutine(Dash(Vector3.right, true));
@@ -448,7 +463,7 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInput == 0)
             {
-                if (isFacingRight)
+                if (IsFacingRight)
                     StartCoroutine(Dash(Vector3.left, false));
                 else
                     StartCoroutine(Dash(Vector3.right, false));
@@ -473,9 +488,9 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInput == 0)
             {
-                moveInput = isFacingRight? -1 : 1; // Default to forward dodge if no input
+                moveInput = IsFacingRight? -1 : 1; // Default to forward dodge if no input
             }
-            if (isFacingRight)
+            if (IsFacingRight)
             {
                 if (moveInput >= 0) // Forward dodge roll
                     StartCoroutine(DodgeRoll(Vector3.right, true));
@@ -494,7 +509,7 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInput == 0)
             {
-                if (isFacingRight)
+                if (IsFacingRight)
                     StartCoroutine(DodgeRoll(Vector3.left, false));
                 else
                     StartCoroutine(DodgeRoll(Vector3.right, false));
