@@ -26,15 +26,9 @@ public class PlayerAnimationController : MonoBehaviour
 	}
 
 	// This method triggers the jump animation
-	public void TriggerJump()
+	public void TriggerJump(bool isDoubleJump)
 	{
-		animator.SetTrigger("jump");
-	}
-
-	// This method triggers the double jump animation
-	public void TriggerDoubleJump()
-	{
-		animator.SetTrigger("doubleJump");
+		animator.SetTrigger(isDoubleJump ? "doubleJump" : "jump");
 	}
 
 	// These methods trigger dash animations for forward and backward

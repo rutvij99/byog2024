@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -10,7 +11,7 @@ public class PlayerController : MonoBehaviour
 {
     // Forward lock variables
     [Header("Target Locking")]
-    public CinemachineTargetGroup tg;
+    [FormerlySerializedAs("tg")] public CinemachineTargetGroup cinemachineTargetGroup;
     public PlayerTarget currentTarget;
     public bool isTargetLockEnabled = false; // Toggle for forward locking mode
     
@@ -49,10 +50,16 @@ public class PlayerController : MonoBehaviour
     [Header("Hit/Recoil")]
     [SerializeField] private float stunDuration = 1.5f;     // Duration of stun when player is stunned
     [SerializeField] private float stunChance = 0.3f;       // Probability of getting stunned (30% chance)
-    [SerializeField] private float invulnerabilityTime = 1.0f; // Time during which player can't get hit after taking damage
-    [SerializeField] private float stunnedInvulnerabilityTime = 1.0f; // Time during which player can't get hit after taking damage
     [SerializeField] private float pushBackForce = 5f; // Strength of the push-back force
     [SerializeField] private float pushBackDuration = 0.2f;  // Duration of the push-back effect
+    
+    
+    [Header("IFrames")]
+    [SerializeField] private float hitIFrames = 1.0f; // Time during which player can't get hit after taking damage
+    [SerializeField] private float stunnedIFramesTime = 1.0f; // Time during which player can't get hit after taking damage
+    [SerializeField] private float dashIFramesTime = 0.2f;
+    [SerializeField] private float dodgeIFramesTime = 0.3f;
+    
     
     private Rigidbody _rb;
     private PlayerStats _playerStats;
@@ -82,6 +89,7 @@ public class PlayerController : MonoBehaviour
     private bool dodgeInput;
     private bool attackInput;
     private bool blockInput;
+    private bool targetLockInput;
 
     
     public bool IsAttacking { get; private set; } = false;
@@ -93,8 +101,6 @@ public class PlayerController : MonoBehaviour
     public bool IsDodging { get; private set; } = false;
 
     public bool IsDashing { get; private set; } = false;
-
-    public bool IsRunning { get; private set; } = false;
 
     public bool IsStunned { get; private set; } = false;
 
@@ -117,11 +123,10 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if(_playerStats.IsDead) return;
-        // Ground check and coyote timer logic
         CheckGround();
         CheckCayoteTimer();
-        // Gather input
         CheckInput();
+        CheckLockTarget();
     }
 
     private void CheckInput()
@@ -137,19 +142,18 @@ public class PlayerController : MonoBehaviour
             attackInput = true;
         blockInput = Input.GetKey(KeyCode.Mouse1);
         if (Input.GetKeyDown(KeyCode.Q))
-        {
-            TryLockTarget();
-        }
+            targetLockInput = true;
     }
 
-    public void TryLockTarget()
+    public void CheckLockTarget()
     {
+        targetLockInput = false;
         isTargetLockEnabled = !isTargetLockEnabled;
         if (!isTargetLockEnabled)
         {
             if (currentTarget != null)
             {
-                tg.RemoveMember(currentTarget.transform);
+                cinemachineTargetGroup.RemoveMember(currentTarget.transform);
                 currentTarget.SetLock(false);
             }
             return;
@@ -160,7 +164,7 @@ public class PlayerController : MonoBehaviour
             isTargetLockEnabled = false;
         }
 
-        tg.AddMember(currentTarget.transform, 1, 0.5f);
+        cinemachineTargetGroup.AddMember(currentTarget.transform, 1, 0.5f);
         currentTarget.SetLock(true);
     }
 
@@ -171,6 +175,7 @@ public class PlayerController : MonoBehaviour
         dodgeInput = false;
         attackInput = false;
         blockInput = false;
+        targetLockInput = false;
     }
 
     private void CheckGround()
@@ -212,41 +217,33 @@ public class PlayerController : MonoBehaviour
 
     private void HandleBlock()
     {
-        IsBlocking = blockInput && !IsAttacking && IsGrounded && !IsDodging && !IsDashing && !IsStunned;
+        IsBlocking = blockInput && IsGrounded && !IsAttacking && !IsDodging && !IsDashing && !IsStunned;
         // Debug.Log($"Blocking : {IsBlocking} --- {blockInput} -> {!IsAttacking} -> {IsGrounded} -> {!IsDodging} -> {!IsStunned} -> {!IsDashing}");
         _animController.SetBlock(IsBlocking);
     }
 
+    #region Movement
     private void HandleMovement()
     {
         if (IsDodging || IsDashing) return; // Disable normal movement during dodge roll or dash
-
-        if (IsAttacking)
+        if (IsAttacking || moveInput == 0)
         {
             SetIdle();
             return;
         }
         float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
         int animationState = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
-
-        if (moveInput == 0)
-        {
-            SetIdle();
-            return;
-        }
         
         if (isTargetLockEnabled)
         {
-            // Rotate the player to face the current target
             RotateTowardsTarget();
-            // Forward lock: move forward/backward but always face right
             HandleMoveWithLock(speed, animationState);
         }
         else
         {
             var isMovingBackward = moveInput < 0;
-            // Without lock: rotate and face direction
-            HandleMoveWithTurn(speed, animationState, isMovingBackward);
+            RotateBaseOnInput(isMovingBackward);
+            HandleMoveWithTurn(speed, animationState); // Without lock: rotate and face direction
         }
     }
 
@@ -257,40 +254,66 @@ public class PlayerController : MonoBehaviour
         _rb.linearVelocity = new Vector3(direction * speed, _rb.linearVelocity.y, 0);
     }
 
-    private void HandleMoveWithTurn(float speed, int animationState, bool isMovingBackward)
+    private void HandleMoveWithTurn(float speed, int animationState)
     {
-        if (isMovingBackward && isFacingRight)
-        {
-            RotateToDirection(false);
-        }
-        else if (!isMovingBackward && !isFacingRight)
-        {
-            RotateToDirection(true);
-        }
-
         _animController.SetMovement(animationState);
         _rb.linearVelocity = new Vector3(moveInput * speed, _rb.linearVelocity.y, 0);
     }
     
     private void SetIdle()
     {
-        IsRunning = false;
         _animController.SetMovement(0); // Set idle animation
         _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0); // Stop movement
     }
+    #endregion
+    
+    #region Rotation
+    private void RotateTowardsTarget()
+    {
+        if (currentTarget == null) return;
+        Vector3 directionToTarget = currentTarget.transform.position - transform.position;
 
+        if (directionToTarget.x > 0)
+        {
+            RotateToDirection(true); // Face right (90°)
+        }
+        else if (directionToTarget.x < 0)
+        {
+            RotateToDirection(false); // Face left (-90°)
+        }
+    }
 
+    private void RotateBaseOnInput(bool isMovingBackward)
+    {
+        if (isMovingBackward && isFacingRight)
+        {
+            RotateToDirection(false); // Face left (-90°)
+        }
+        else if (!isMovingBackward && !isFacingRight)
+        {
+            RotateToDirection(true); // Face right (90°)
+        }
+    }
+    
+    private void RotateToDirection(bool faceRight)
+    {
+        isFacingRight = faceRight;
+        transform.rotation = Quaternion.Euler(0, faceRight ? 90 : -90, 0);
+    }
+    #endregion
+
+    #region Jump
     private void HandleJump()
     {
         if (jumpInput)
         {
             if (IsGrounded && coyoteTimer > 0)
             {
-                Jump(jumpForce, false);
+                Jump(false);
             }
             else if (CanDoubleJump)
             {
-                Jump(doubleJumpForce, true);
+                Jump(true);
                 CanDoubleJump = false;
             }
         }
@@ -301,13 +324,10 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    private void Jump(float force, bool isDoubleJump)
+    private void Jump(bool isDoubleJump)
     {
-        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, force, 0);
-        if(isDoubleJump)
-            _animController.TriggerDoubleJump();
-        else
-            _animController.TriggerJump();
+        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, isDoubleJump ? doubleJumpForce : jumpForce, 0);
+        _animController.TriggerJump(isDoubleJump);
     }
     
     private void ApplyFallGravity()
@@ -329,7 +349,8 @@ public class PlayerController : MonoBehaviour
             _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, maxFallSpeed, 0);
         }
     }
-
+    #endregion
+    
     private void HandleDash()
     {
         if (!AllowDashOrDodge() || !_playerStats.IsDashPossible()) return;
@@ -427,6 +448,7 @@ public class PlayerController : MonoBehaviour
     
     private IEnumerator Dash(Vector3 direction, bool isForward)
     {
+        HandleIFrames(dashIFramesTime);
         _playerStats.DashModifiers();
         IsDashing = true;
         _animController.TriggerDash(isForward);
@@ -439,6 +461,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DodgeRoll(Vector3 direction, bool isForward)
     {
+        HandleIFrames(dodgeIFramesTime);
         _playerStats.DodgeModifiers();
         IsDodging = true;
         _animController.TriggerDodgeRoll(isForward); // Trigger dodge roll animation (forward/backward)
@@ -447,6 +470,11 @@ public class PlayerController : MonoBehaviour
         _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);  // Reset velocity to zero after dodge roll
         lastDodge = Time.time; // Record dodge time
         IsDodging = false;
+    }
+    
+    private bool AllowDashOrDodge()
+    {
+        return IsGrounded && !IsDodging && !IsDashing && !IsAttacking;
     }
 
     #region Attack
@@ -508,8 +536,102 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     
-    #region GetHit Logic
+    #region Get Hit Logic
+    // todo add push back on hit if too much damage
+    public void Hit(int damage, bool forceStun = false, Transform hitter = null)
+    {
+        if (IsInvulnerable) return;
+        lastHitTime = Time.time;
+        Debug.Log("Player got hit! Damage: " + damage);
+        _playerStats.TakeDamage(damage);
+        if (_playerStats.IsDead)
+        {
+            _animController.TriggerDeath();
+            return;
+        }
+        // Apply push-back force if hitter exists
+        var isStunned = UnityEngine.Random.value < stunChance || forceStun;
+        if (hitter != null)
+        {
+            ApplyPushBack(hitter, isStunned);
+        }
+        if (!IsStunned)
+        {
+            if (isStunned)
+            {
+                StunPlayer();
+            }
+            HandleIFrames(hitIFrames);
+        }
+        _animController.TriggerHit();
+    }
+    
+    private void ApplyPushBack(Transform hitter, bool actualStun)
+    {
+        // temp stun for pushback
+        IsStunned = true;
+        Vector3 directionAwayFromHitter = (transform.position - hitter.position).normalized;
+        // Set the velocity directly for a more precise push-back
+        _rb.linearVelocity = directionAwayFromHitter * pushBackForce;
+        StartCoroutine(StopPushBackAfterDelay(actualStun));
+    }
 
+    private IEnumerator StopPushBackAfterDelay( bool actualStun)
+    {
+        yield return new WaitForSeconds(pushBackDuration);
+        if (!actualStun)
+        {
+            IsStunned = false;
+        }
+        _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);  // Only stop horizontal movement, retain vertical velocity
+    }
+
+    private void StunPlayer()
+    {
+        Debug.Log("Player is stunned!");
+        IsStunned = true;
+        _animController.SetStun(IsStunned);
+        StartCoroutine(StunPlayerRoutine());
+    }
+
+    private IEnumerator StunPlayerRoutine()
+    {
+        yield return new WaitForSeconds(stunDuration);
+        IsStunned = false;
+        Debug.Log("Player recovered from stun.");
+        HandleIFrames(stunnedIFramesTime);
+        _animController.SetStun(IsStunned);
+    }
+    #endregion
+    
+    #region IFrame
+    private Coroutine iFrameRoutine;
+    private void HandleIFrames(float iframeDuration, bool useStunIFramesTime = false)
+    {
+        IsInvulnerable = true;
+        Debug.Log("Player iFrames started!");
+        if (iFrameRoutine != null)
+        {
+            StopCoroutine(iFrameRoutine);
+        }
+        iFrameRoutine = StartCoroutine(StartIFrames(iframeDuration));
+    }
+
+    private IEnumerator StartIFrames(float iframeDuration)
+    {
+        yield return new WaitForSeconds(iframeDuration);
+        IsInvulnerable = false;
+        Debug.Log("Player iFrames ended");
+        iFrameRoutine = null;
+    }
+    #endregion
+    
+    #region Testing
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+    }
     [Button]
     public void TestHit()
     {
@@ -531,140 +653,6 @@ public class PlayerController : MonoBehaviour
     {
         Hit(10, true, currentTarget.transform);
     }
-
-    
-    // todo add push back on hit if too much damage
-    public void Hit(int damage, bool forceStun = false, Transform hitter = null)
-    {
-        if (IsInvulnerable) return;
-        lastHitTime = Time.time;
-        Debug.Log("Player got hit! Damage: " + damage);
-        _playerStats.TakeDamage(damage);
-        if (_playerStats.IsDead)
-        {
-            _animController.TriggerDeath();
-            return;
-        }
-        // Apply push-back force if hitter exists
-        var isStunned = UnityEngine.Random.value < stunChance || forceStun;
-        if (hitter != null)
-        {
-            ApplyPushBack(hitter, isStunned);
-        }
-        if (isStunned)
-        {
-            StunPlayer();
-        }
-        _animController.TriggerHit();
-        if(!IsStunned) HandleInvulnerability();
-    }
-    
-    private void ApplyPushBack(Transform hitter, bool actualStun)
-    {
-        // temp stun for pushback
-        IsStunned = true;
-        // Calculate the direction away from the hitter
-        Vector3 directionAwayFromHitter = (transform.position - hitter.position).normalized;
-        Debug.Log($"Pushing back to player {directionAwayFromHitter * pushBackForce}");
-        // Set the velocity directly for a more precise push-back
-        _rb.linearVelocity = directionAwayFromHitter * pushBackForce;
-
-        // Optionally, stop the push-back after a short duration to prevent continuous sliding
-        StartCoroutine(StopPushBackAfterDelay(actualStun));
-    }
-
-    private IEnumerator StopPushBackAfterDelay( bool actualStun)
-    {
-        yield return new WaitForSeconds(pushBackDuration);
-
-        if (!actualStun)
-        {
-            IsStunned = false;
-        }
-        _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);  // Only stop horizontal movement, retain vertical velocity
-    }
-
-    private void StunPlayer()
-    {
-        Debug.Log("Player is stunned!");
-        IsStunned = true;
-        _animController.SetStun(IsStunned);
-        StartCoroutine(StunPlayerRoutine());
-    }
-
-    private IEnumerator StunPlayerRoutine()
-    {
-        yield return new WaitForSeconds(stunDuration);
-        IsStunned = false;
-        Debug.Log("Player recovered from stun.");
-        HandleInvulnerability(true);
-        _animController.SetStun(IsStunned);
-    }
-
-    private void HandleInvulnerability(bool useStunIFramesTime = false)
-    {
-        IsInvulnerable = true;
-        Debug.Log("Player iFrames started!");
-        StartCoroutine(StartInvulnerability(useStunIFramesTime));
-    }
-
-    private IEnumerator StartInvulnerability(bool useStunIFramesTime = false)
-    {
-        yield return new WaitForSeconds(useStunIFramesTime ? stunnedInvulnerabilityTime : invulnerabilityTime);
-        IsInvulnerable = false;
-        Debug.Log("Player iFrames ended");
-    }
     #endregion
-    
-    
-    
-    private void RotateTowardsTarget()
-    {
-        if (currentTarget == null) return;
-
-        // Check if the target is on the left or right of the player
-        Vector3 directionToTarget = currentTarget.transform.position - transform.position;
-
-        // If target is to the right, face 90° (right)
-        if (directionToTarget.x > 0)
-        {
-            RotateToDirection(true); // Face right (90°)
-        }
-        // If target is to the left, face -90° (left)
-        else if (directionToTarget.x < 0)
-        {
-            RotateToDirection(false); // Face left (-90°)
-        }
-    }
-
-    
-    private void RotateToDirection(bool faceRight)
-    {
-        isFacingRight = faceRight;
-        transform.rotation = Quaternion.Euler(0, faceRight ? 90 : -90, 0);
-    }
-    
-    
-    private bool AllowDashOrDodge()
-    {
-        return IsGrounded && !IsDodging && !IsDashing && !IsAttacking;
-    }
-    
-    private Vector3 GetDirection()
-    {
-        return moveInput == 0 ? (isFacingRight ? Vector3.right : Vector3.left) : (moveInput > 0 ? Vector3.right : Vector3.left);
-    }
-
-    private bool IsMovingForward()
-    {
-        return moveInput >= 0 || (moveInput == 0 && isFacingRight);
-    }
-    
-    
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-    }
 
 }
