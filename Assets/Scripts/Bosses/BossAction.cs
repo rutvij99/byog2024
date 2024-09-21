@@ -63,5 +63,10 @@ namespace Bosses
         {
             PlayAnimationClip(idleAnim);
         }
+
+        public void PlaySFX(string key)
+        {
+            AudioManager.PlaySFX(GetComponent<BossBase>().SFXClips.GetClip(key));
+        }
     }
 }

@@ -36,7 +36,8 @@ namespace Bosses.Common
             
             float dur = dist / speed;
             float step = 0;
-            
+
+            var currPos = transform.position;
             PlayAnimationClip(moveAnim);
             GetComponent<BossBase>().LookAtEnemy();
             while(step <= 1)
@@ -45,9 +46,10 @@ namespace Bosses.Common
                 dist = Vector3.Distance(transform.position, target.transform.position) - stoppingDist;
                 if (dist <= stoppingDist)
                 {
+                    yield return new WaitForEndOfFrame();
                     break;
                 }
-                transform.position = Vector3.Lerp(transform.position, targetPos, step);
+                transform.position = Vector3.Lerp(currPos, targetPos, step);
                 yield return new WaitForEndOfFrame();
             }
             PlayIdleAnimation();

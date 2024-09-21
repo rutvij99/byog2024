@@ -6,6 +6,9 @@ namespace Bosses.Common
 {
     public class BossDamageDealer : MonoBehaviour
     {
+        [SerializeField] private AudioClip hitSFX;
+        [SerializeField] private GameObject hitFX;
+        
         private BossTarget activeTarget;
         private int dmg;
         public virtual void DealDamage(int damage)
@@ -24,8 +27,14 @@ namespace Bosses.Common
 
                 activeTarget = bt;
                 var entity = bt.GetComponent<Entity.Entity>();
-                if(entity)
+                if (entity)
+                {
+                    AudioManager.PlaySFX(hitSFX);
                     entity.TakeDamage(dmg);
+
+                    var go = Instantiate(hitFX, other.transform.position + new Vector3(0,1,0), Quaternion.identity);
+                    Destroy(go, 2);
+                }
             }
         }
 

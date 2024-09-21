@@ -66,4 +66,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 231b994958cb426f90ed896781528e98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitSFX: {fileID: 8300000, guid: 174c5ef03c553ce41aacacb7a5696eb8, type: 3}
+  hitFX: {fileID: 2427786012956944610, guid: da0de216ad60c5d46a6b049d61961615, type: 3}
   coll: {fileID: 84509656190592477}

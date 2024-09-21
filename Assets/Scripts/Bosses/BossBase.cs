@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
 using Bosses.Common;
-using NUnit.Framework;
-using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -31,6 +28,8 @@ namespace Bosses
     [RequireComponent(typeof(Rigidbody))]
     public class BossBase : MonoBehaviour
     {
+        [SerializeField] public AudioMapDataAsset SFXClips;
+        
         [SerializeField] private bool autoActivate = true;
         
         [SerializeField] private AudioClip bossMusicClip;
@@ -179,6 +178,10 @@ namespace Bosses
         protected void PlayAnimationClip(AnimationClip clip, float speed=1)
         {
             animator.speed = speed;
+            foreach (var animeEventvent in clip.events)
+            {
+                animeEventvent.objectReferenceParameter = this;
+            }
             animator.CrossFade(clip.name, normalizedTransitionDuration:0.15f);
         }
 
@@ -234,6 +237,11 @@ namespace Bosses
             yield return new WaitForSecondsRealtime(2);
             deathCam.SetActive(false);
             Time.timeScale = 1;
+        }
+        
+        public void PlaySFX(string key)
+        {
+            AudioManager.PlaySFX(SFXClips.GetClip(key));
         }
     }
 }

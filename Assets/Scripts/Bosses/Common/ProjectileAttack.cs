@@ -22,6 +22,7 @@ namespace Bosses.Common
             var projectile = Instantiate(projectileToShoot, spawnPoint.position, Quaternion.identity).GetComponent<Projectile>();
             var dir = (BossTarget.Target.transform.position - spawnPoint.position).normalized;
             projectile.Launch(dir, projectileSpeed, damage);
+            PlaySFX("projectile");
             yield return new WaitForSeconds((1.0f - launchDelay) * animClip.length);
             PlayIdleAnimation();
         }

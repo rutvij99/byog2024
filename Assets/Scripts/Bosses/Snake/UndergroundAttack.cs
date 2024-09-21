@@ -34,6 +34,7 @@ namespace Bosses
             var fxGo = Instantiate(diveOutFx, transform.position, diveOutFx.transform.rotation);
             Destroy(go, 3f);
             PlayAnimationClip(diveOutClip);
+            PlaySFX("splash");
             var damager = Instantiate(damagerPrefab, transform.position, Quaternion.identity).GetComponent<BossDamageDealer>();
             yield return new WaitForSeconds(diveOutClip.length / 4f);
             damager.DealDamage(damage);

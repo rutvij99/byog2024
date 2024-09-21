@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3caa56ca71a9c4d850cd1ecb7ca1fe, type: 3}
+  m_Name: Boss_Standard_SFX
+  m_EditorClassIdentifier: 
+  audioClips:
+    _serializedList:
+    - Key: ground_slam
+      Value: {fileID: 8300000, guid: 6125b3bce775bbd4ea2de8e5c1e112d6, type: 3}
+    - Key: splash
+      Value: {fileID: 8300000, guid: 80561801b9b38de43a309dd21963d150, type: 3}
+    - Key: projectile
+      Value: {fileID: 8300000, guid: 98680a1907913ae4791811be4a6ca50f, type: 3}
+    - Key: electricity
+      Value: {fileID: 8300000, guid: 739ee9fa9ff23d64eb917b5e98163044, type: 3}
+    - Key: drill
+      Value: {fileID: 8300000, guid: 472a38a59fe0b4f42b021d2b329c4c78, type: 3}
+    - Key: ground_slam_explosion
+      Value: {fileID: 8300000, guid: 547f84864d4c6b046ada0703621a79e9, type: 3}
+    - Key: hit
+      Value: {fileID: 8300000, guid: 174c5ef03c553ce41aacacb7a5696eb8, type: 3}
+    - Key: metal_cling
+      Value: {fileID: 8300000, guid: e6ac81a1f73a6dd42ad5b5860e767d0e, type: 3}
+    - Key: roar_orc
+      Value: {fileID: 8300000, guid: 71587df63ae9f2e44bc4d90ab6c09d65, type: 3}
+    - Key: roar_snake
+      Value: {fileID: 8300000, guid: c570074b9bed9a1478640c8a3b70b1e8, type: 3}
+    - Key: stage_1
+      Value: {fileID: 8300000, guid: af4addb59aa14354e81d95d0be6753ab, type: 3}
+    - Key: stage_2
+      Value: {fileID: 8300000, guid: 8dfda88ef37f16e4c9f46b0b61d5683d, type: 3}
+    - Key: attack_woosh
+      Value: {fileID: 8300000, guid: 4883be69fb43d994fa90b4e21deaf4a3, type: 3}
+    - Key: attack_woosh_2
+      Value: {fileID: 8300000, guid: 407ee081e862eb14298c25c8810b4b7e, type: 3}
+    - Key: attack_woosh_3
+      Value: {fileID: 8300000, guid: 407ee081e862eb14298c25c8810b4b7e, type: 3}
+    - Key: defeat
+      Value: {fileID: 8300000, guid: 55a9b30383f271c4ba0684757266a415, type: 3}

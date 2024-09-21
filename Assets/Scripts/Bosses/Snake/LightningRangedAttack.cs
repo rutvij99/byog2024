@@ -20,6 +20,7 @@ namespace Bosses
             PlayAnimationClip(startUpClip);
             yield return new WaitForSeconds(startUpClip.length);
             PlayAnimationClip(attackClip);
+            PlaySFX("lightning");
             yield return new WaitForSeconds(attackClip.length / 4);
             var damager = Instantiate(damagerPrefab, transform.position, Quaternion.identity).GetComponent<BossDamageDealer>();
             damager.transform.parent = transform;
