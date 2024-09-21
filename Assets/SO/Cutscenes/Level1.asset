@@ -17,32 +17,55 @@ MonoBehaviour:
   - Title: Mage
     Text: The time has come. Your first challenge awaits! Prepare to face...
     mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
   - Title: You
     Text: A horrifying beast of unimaginable power?
     mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
   - Title: Mage
     Text: ...Orc-timus Prime! The Muscle-bound Menace, the Shuffler of Feet, and
       Chief General of Baron Villakron!
     mageAnim: {fileID: 7400000, guid: f46d15bbb23c4268a6e7424b9cc78eab, type: 3}
+    camera: 
+    TBC: 0
   - Title: You
     Text: "Baron Villakron? Sounds like he\u2019s compensating for something."
     mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
   - Title: Mage
     Text: "Yes, mostly bad fashion choices. But also, Villakron seeks to plunge the
       world into eternal chaos by hoarding all of the world\u2019s... resources."
     mageAnim: {fileID: 7400000, guid: b69d1761a9bb4c1798152390a74c478d, type: 3}
+    camera: 
+    TBC: 0
   - Title: You
     Text: "Let me guess\u2014sandwiches?"
     mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
   - Title: Mage
     Text: Exactly! The Sandwich Monopoly is just the beginning. Soon, he'll control
-      every loaf of bread, every slice of cheese, and every scrap of ham! If he isn't
-      stopped, the world will crumble under a reign of flavorless despair
+      every loaf of bread, every slice of cheese, and every scrap of ham
     mageAnim: {fileID: 7400000, guid: b69d1761a9bb4c1798152390a74c478d, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: If he isn't stopped, the world will crumble under a reign of flavorless
+      despair
+    mageAnim: {fileID: 7400000, guid: b69d1761a9bb4c1798152390a74c478d, type: 3}
+    camera: 
+    TBC: 0
   - Title: You
     Text: So, we're stopping him to prevent a culinary apocalypse?
     mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
   - Title: Mage
     Text: "Precisely! Now go, defeat Orc-timus Prime, and slice through Villakron\u2019s
       army of hoarders!"
     mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
