@@ -11,6 +11,8 @@ TagManager:
   - Animal
   - Water
   - Enemy
+  - FxTemporaire
+  - PP
   layers:
   - Default
   - TransparentFX
