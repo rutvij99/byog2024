@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2a34129b31a44eab3b63c93ab386247, type: 3}
   m_Name: BlackKnight
   m_EditorClassIdentifier: 
-  EntityName: Knight of Mt. Duum
-  MaxHealth: 100
+  EntityName: Sir Clankalot
+  MaxHealth: 315

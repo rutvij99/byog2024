@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d010edf4dba041bfb91b2b1fae840e9a, type: 3}
+  m_Name: Level final
+  m_EditorClassIdentifier: 
+  Music: {fileID: 8300000, guid: 0511c0a385a182b42a74b7b0ecda895a, type: 3}
+  Dialogs:
+  - Title: Mage
+    Text: "This is it. The moment we\u2019ve been waiting for. You\u2019re about
+      to face... Baron Villakron himself!"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: You
+    Text: "Finally! I\u2019m ready to take him down. What's his deal, anyway?"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: Villakron is more than just a fashion disaster.
+    mageAnim: {fileID: 7400000, guid: f46d15bbb23c4268a6e7424b9cc78eab, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: "He\u2019s been plotting for years to corner the market on all food-related
+      goods, especially sandwiches."
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: His plan? To control every bakery, every deli, and every picnic in the
+      world!
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: You
+    Text: Wow. This guy is obsessed. All this chaos... for sandwiches?
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: With his army of bread bakers and sandwich-stuffers, Villakron plans to
+      make himself the only source of sustenance!
+    mageAnim: {fileID: 7400000, guid: b69d1761a9bb4c1798152390a74c478d, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: "He controls all the forges and ovens under Villakron\u2019s rule."
+    mageAnim: {fileID: 7400000, guid: b69d1761a9bb4c1798152390a74c478d, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: "If you don\u2019t stop him, every meal will be overpriced, underseasoned,
+      and served on stale bread!"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: You
+    Text: "I\u2019m not just fighting a villain... I\u2019m fighting for lunch!"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: Exactly! You must stop his reign of bland terror and free the world from
+      the tyranny of tasteless sandwiches!
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: You
+    Text: "Alright. Let\u2019s toast this guy. Any final advice?"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: "Just... beware his ultimate weapon. They say it\u2019s... the Panini of
+      Doom!"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: You
+    Text: A sandwich press? Really?
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 0
+  - Title: Mage
+    Text: "Oh, you\u2019ll see. Now, prepare yourself\u2014Villakron awaits in his
+      castle of crusted despair!"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: castleView
+    TBC: 0
+  - Title: You
+    Text: "let\u2019s go save the world!."
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+    camera: 
+    TBC: 1

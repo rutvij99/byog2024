@@ -1,28 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Bosses.Cutscene
 {
-
-    [Serializable]
-    public class Dialog
-    {
-        public string Title;
-        public string Text;
-        public AnimationClip mageAnim;
-    }
-    
-    [CreateAssetMenu(fileName = "CutsceneAsset", menuName = "IRIS/Cutscene")]
-    public class CutsceneDataAsset : ScriptableObject
-    {
-        public List<Dialog> Dialogs;
-    }
-    
     public class Cutscene : MonoBehaviour
     {
+        [SerializeField]
+        private AudioClip click;
+        
         [SerializeField] private GameObject body;
         [SerializeField] private TMPro.TMP_Text title;
         [SerializeField] private TMPro.TMP_Text msg;
@@ -31,15 +20,32 @@ namespace Bosses.Cutscene
         [SerializeField] private CutsceneDataAsset asset;
         [SerializeField] private string nextLevel;
 
-        private int id = 0;
+        private int id = -1;
         
         private void Start()
         {
             NextDialog();
+            AudioManager.PlayBackgroundMusic(asset.Music);
         }
 
         private void NextDialog()
         {
+            if (id >= 0 && asset.Dialogs[id].TBC)
+            {
+                var go = GameObject.Find("TBC");
+                if (go)
+                {
+                    body.SetActive(false);
+                    var anim = go.GetComponent<Animator>();
+                    if (!anim.enabled)
+                    {
+                        anim.enabled = true;
+                        return;
+                    } 
+                }
+                
+            }
+            
             id++;
             if (id >= asset.Dialogs.Count)
             {
@@ -51,17 +57,27 @@ namespace Bosses.Cutscene
             title.text = asset.Dialogs[id].Title;
             msg.text = asset.Dialogs[id].Text;
             speaker.CrossFade(asset.Dialogs[id].mageAnim.name, 0.25f, 0);
+
+            if (!string.IsNullOrEmpty(asset.Dialogs[id].camera))
+            {
+                var go = GameObject.Find(asset.Dialogs[id].camera);
+                if(go)
+                    go.GetComponent<CinemachineCamera>().enabled = true;
+            }
         }
         
         private void Update()
         {
-            if(Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                AudioManager.PlaySFX(click);
                 NextDialog();
+            }
         }
 
         private void LoadNextScene()
         {
-            SceneManager.LoadScene(nextLevel);
+            SceneLoader.Request(nextLevel);
         }
     }
     

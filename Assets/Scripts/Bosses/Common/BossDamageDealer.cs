@@ -26,11 +26,11 @@ namespace Bosses.Common
                     return;
 
                 activeTarget = bt;
-                var entity = bt.GetComponent<Entity.Entity>();
-                if (entity)
+                var player = bt.GetComponent<PlayerStats>();
+                if (player)
                 {
                     AudioManager.PlaySFX(hitSFX);
-                    entity.TakeDamage(dmg);
+                    player.TakeDamage(dmg);
 
                     var go = Instantiate(hitFX, other.transform.position + new Vector3(0,1,0), Quaternion.identity);
                     Destroy(go, 2);

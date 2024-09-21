@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d010edf4dba041bfb91b2b1fae840e9a, type: 3}
+  m_Name: Level1
+  m_EditorClassIdentifier: 
+  Music: {fileID: 8300000, guid: 999d9cc9e7e089743991dd07400cf485, type: 3}
+  Dialogs:
+  - Title: Mage
+    Text: The time has come. Your first challenge awaits! Prepare to face...
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: You
+    Text: A horrifying beast of unimaginable power?
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: ...Orc-timus Prime! The Muscle-bound Menace, the Shuffler of Feet, and
+      Chief General of Baron Villakron!
+    mageAnim: {fileID: 7400000, guid: f46d15bbb23c4268a6e7424b9cc78eab, type: 3}
+  - Title: You
+    Text: "Baron Villakron? Sounds like he\u2019s compensating for something."
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: "Yes, mostly bad fashion choices. But also, Villakron seeks to plunge the
+      world into eternal chaos by hoarding all of the world\u2019s... resources."
+    mageAnim: {fileID: 7400000, guid: b69d1761a9bb4c1798152390a74c478d, type: 3}
+  - Title: You
+    Text: "Let me guess\u2014sandwiches?"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: Exactly! The Sandwich Monopoly is just the beginning. Soon, he'll control
+      every loaf of bread, every slice of cheese, and every scrap of ham! If he isn't
+      stopped, the world will crumble under a reign of flavorless despair
+    mageAnim: {fileID: 7400000, guid: b69d1761a9bb4c1798152390a74c478d, type: 3}
+  - Title: You
+    Text: So, we're stopping him to prevent a culinary apocalypse?
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: "Precisely! Now go, defeat Orc-timus Prime, and slice through Villakron\u2019s
+      army of hoarders!"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}

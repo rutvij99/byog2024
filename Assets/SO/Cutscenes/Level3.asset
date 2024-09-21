@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d010edf4dba041bfb91b2b1fae840e9a, type: 3}
+  m_Name: Level3
+  m_EditorClassIdentifier: 
+  Music: {fileID: 8300000, guid: faae74f7e63621f42a3a234ca29a60f1, type: 3}
+  Dialogs:
+  - Title: Mage
+    Text: "Your final challenge awaits. The fiercest of Villakron\u2019s generals
+      stands before you."
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: You
+    Text: "Let me guess, he\u2019s on fire?"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: Indeed! Sir Clankalot the Unbreakable, Wielder of Flames, and third general
+      to Baron Villakron!
+    mageAnim: {fileID: 7400000, guid: f46d15bbb23c4268a6e7424b9cc78eab, type: 3}
+  - Title: You
+    Text: Great, I get to fight a knight who doubles as a bonfire.
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: Sir Clankalot is more than just fiery armor.
+    mageAnim: {fileID: 7400000, guid: b69d1761a9bb4c1798152390a74c478d, type: 3}
+  - Title: Mage
+    Text: "He controls all the forges and ovens under Villakron\u2019s rule."
+    mageAnim: {fileID: 7400000, guid: b69d1761a9bb4c1798152390a74c478d, type: 3}
+  - Title: Mage
+    Text: Without him, Villakron won't be able to bake his endless supply of bread
+      for those diabolical sandwiches!"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: You
+    Text: "So I\u2019m fighting a knight to save the world from... sandwiches again?"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: "You don\u2019t understand! "
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: "With Sir Clankalot at Villakron\u2019s side, no loaf will ever go unbaked,
+      no roll unbuttered."
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: "The flames of his forge fuel Villakron\u2019s army, and if you don\u2019t
+      stop him, the world will drown in toasted despair!"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: You
+    Text: "This is officially the weirdest mission ever. But hey, I like toast, so
+      let\u2019s not let this guy ruin it."
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
+  - Title: Mage
+    Text: "Exactly! Now, go extinguish the flame of Villakron\u2019s bread-fueled
+      tyranny!"
+    mageAnim: {fileID: 7400000, guid: 7b7c7f1ea361421b87bca8a8a3a64b1a, type: 3}
