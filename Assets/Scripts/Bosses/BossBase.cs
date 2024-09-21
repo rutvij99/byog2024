@@ -229,7 +229,7 @@ namespace Bosses
         {
             deathCam.SetActive(true);
             yield return new WaitForSecondsRealtime(0.35f);
-            
+            PlaySFX("defeat", true);
             if(soul)
                 Instantiate(soul, transform.position + soulOffset, Quaternion.identity);
             
@@ -239,9 +239,9 @@ namespace Bosses
             Time.timeScale = 1;
         }
         
-        public void PlaySFX(string key)
+        public void PlaySFX(string key, bool louder=false)
         {
-            AudioManager.PlaySFX(SFXClips.GetClip(key));
+            AudioManager.PlaySFX(SFXClips.GetClip(key), louder);
         }
     }
 }
