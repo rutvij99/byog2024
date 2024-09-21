@@ -41,6 +41,7 @@ public class PlayerAttackModule : MonoBehaviour
         {
             direction = playerController.IsFacingRight ? Vector3.right : Vector3.left;
         }
+        Destroy(projectileSpawnPoint);
         proj.Launch(direction, (int)currentAttackInfo.damage);
 	}
 }

@@ -17,19 +17,23 @@ MonoBehaviour:
   airAttacks:
   - attackId: W_C1
     attackDuration: 0.5
-    staminaCost: 15
+    staminaCost: 10
     manaCost: 15
     healthCost: 0
-    damage: 20
-    maxChargeMultiplier: 0
+    damage: 10
   lightMeleeAttacks:
   - attackId: W_C1
     attackDuration: 0.5
-    staminaCost: 15
+    staminaCost: 10
     manaCost: 15
     healthCost: 0
-    damage: 20
-    maxChargeMultiplier: 0
+    damage: 9
+  - attackId: W_C2
+    attackDuration: 0.5
+    staminaCost: 10
+    manaCost: 15
+    healthCost: 0
+    damage: 9
   heavyMeleeAttacks: []
   maxWalkSpeed: 6
   maxRunSpeed: 9
