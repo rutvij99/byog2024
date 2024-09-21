@@ -23,6 +23,8 @@ public class PlayerAttackModule : MonoBehaviour
 	}
 	private void OnTriggerEnter(Collider other)
 	{
+		if(!playerController.IsAttacking) return;
+		if(currentAttackInfo == null) return;
 		var target = other.transform.GetComponentInParent<PlayerTarget>();
 		if (target != null && !allColliders.Contains(target))
 		{

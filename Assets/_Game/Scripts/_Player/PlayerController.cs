@@ -137,7 +137,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if(_playerStats.IsDead) return;
+        if (_playerStats.IsDead)
+        {
+            _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0); // Stop movement
+            return;
+        }
         CheckGround();
         CheckCayoteTimer();
         CheckInput();
@@ -298,6 +302,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_playerStats.IsDead)
+        {
+            _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0); // Stop movement
+            return;
+        }
+        
         if (IsStunned)
         {
             HandleBlock();
