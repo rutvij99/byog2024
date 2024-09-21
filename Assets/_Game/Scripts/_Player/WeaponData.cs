@@ -12,4 +12,5 @@ public class WeaponData : ScriptableObject
     public List<AttackInfo> heavyMeleeAttacks;
     public float maxWalkSpeed;
     public float maxRunSpeed;
+    public List<string> triggerObjs;
 }

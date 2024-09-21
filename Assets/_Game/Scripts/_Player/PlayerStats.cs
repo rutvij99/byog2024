@@ -24,6 +24,7 @@ public class AttackInfo
     public float maxChargeMultiplier;
 }
 
+[DefaultExecutionOrder(-100)]
 public class PlayerStats : MonoBehaviour
 {
     [Header("Max Cap")]
