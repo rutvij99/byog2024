@@ -25,8 +25,8 @@ namespace Bosses.Common
             damager.transform.position = transform.position + transform.forward * offsetMult;
             
             damager.DealDamage(damage);
-            totalAnimTime -=  Mathf.Clamp01(attackClip.length * startDelay);
-            yield return new WaitForSeconds(attackClip.length * startDelay);
+            totalAnimTime -= 0.15f;
+            yield return new WaitForSeconds(0.15f);
             Destroy(damager.gameObject);
             yield return new WaitForSeconds(totalAnimTime);
             PlayIdleAnimation();

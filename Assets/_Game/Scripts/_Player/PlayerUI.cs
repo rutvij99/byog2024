@@ -32,6 +32,9 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private float maxAllowedStaminaWidth = 1800f;
     [SerializeField] private float maxAllowedManaWidth = 1800f;
 
+
+    [SerializeField] private GameObject trackerObj;
+    
     private void Awake()
     {
         if (_instance != null)
@@ -69,6 +72,17 @@ public class PlayerUI : MonoBehaviour
         UpdateUI();
     }
 
+    public void ShowTracker(bool show)
+    {
+        trackerObj.SetActive(show);
+    }
+    
+    public void UpdateLockPoisiton(Vector3 pos)
+    {
+        var screenPos = Camera.main.WorldToScreenPoint(pos);
+        trackerObj.transform.position = screenPos;
+    }
+    
     private void ShowDeadScreen()
     {
         hudGroup.gameObject.SetActive(false);

@@ -40,7 +40,6 @@ namespace Bosses.Cutscene
                     var anim = go.GetComponent<Animator>();
                     if (!anim.enabled)
                     {
-                        done = true;
                         anim.enabled = true;
                         PlayerPrefs.DeleteAll();
                         PlayerPrefs.Save();
@@ -57,9 +56,6 @@ namespace Bosses.Cutscene
                 LoadNextScene();
                 return;
             }
-
-            if (id >= asset.Dialogs.Count)
-                id = asset.Dialogs.Count - 1;
             
             body.SetActive(true);
             title.text = asset.Dialogs[id].Title;
