@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
@@ -9,7 +11,9 @@ public class PlayerUI : MonoBehaviour
 {
     private static PlayerUI _instance;
     public static PlayerUI Instance => _instance;
-    
+
+
+    [SerializeField] private GameObject trackerObj;
     [Header("Player Stats")]
     [SerializeField] private PlayerStats playerStats;
 
@@ -21,6 +25,9 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Image healthBar;
     [SerializeField] private Image staminaBar;
     [SerializeField] private Image manaBar;
+    [SerializeField] private Image healthDiffBar;
+    [SerializeField] private Image staminaDiffBar;
+    [SerializeField] private Image manaDiffBar;
 
     [Header("UI RectTransforms")]
     [SerializeField] private RectTransform healthBarRect;
@@ -32,8 +39,14 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private float maxAllowedStaminaWidth = 1800f;
     [SerializeField] private float maxAllowedManaWidth = 1800f;
 
+    [Header("Weapon UI")]
+    [SerializeField] private Image weaponImage; 
 
-    [SerializeField] private GameObject trackerObj;
+    // Add sprites for each weapon type.
+    [SerializeField] private Sprite swordShieldSprite;
+    [SerializeField] private Sprite greatSwordSprite;
+    [SerializeField] private Sprite wandSprite;
+    [SerializeField] private Sprite noWeaponSprite; // When no weapon is equipped
     
     private void Awake()
     {
@@ -43,6 +56,7 @@ public class PlayerUI : MonoBehaviour
             return;
         }
         _instance = this;
+        playerStats = FindAnyObjectByType<PlayerStats>();
     }
 
     public void Init()
@@ -51,6 +65,7 @@ public class PlayerUI : MonoBehaviour
         deathScreenGroup.gameObject.SetActive(false);
         UpdateTotalUI();
         UpdateUI();
+        UpdateWeaponUI();
     }
 
     [Button]
@@ -72,17 +87,6 @@ public class PlayerUI : MonoBehaviour
         UpdateUI();
     }
 
-    public void ShowTracker(bool show)
-    {
-        trackerObj.SetActive(show);
-    }
-    
-    public void UpdateLockPoisiton(Vector3 pos)
-    {
-        var screenPos = Camera.main.WorldToScreenPoint(pos);
-        trackerObj.transform.position = screenPos;
-    }
-    
     private void ShowDeadScreen()
     {
         hudGroup.gameObject.SetActive(false);
@@ -98,12 +102,47 @@ public class PlayerUI : MonoBehaviour
             }).Play();
         ;
     }
+    
+    public void UpdateWeaponUI()
+    {
+        // Get the current weapon type from the PlayerStats
+        switch (playerStats.currentWeaponType)
+        {
+            case WeaponType.SwordShield:
+                weaponImage.sprite = swordShieldSprite;
+                break;
+            case WeaponType.GreatSword:
+                weaponImage.sprite = greatSwordSprite;
+                break;
+            case WeaponType.Wand:
+                weaponImage.sprite = wandSprite;
+                break;
+            default:
+                weaponImage.sprite = noWeaponSprite;
+                break;
+        }
+    }
 
     private void UpdateUI()
     {
         healthBar.fillAmount = playerStats.currentHealth / playerStats.maxHealth;
+        StartCoroutine(DiffCoroutine(healthDiffBar, healthBar));
         staminaBar.fillAmount = playerStats.currentStamina / playerStats.maxStamina;
+        StartCoroutine(DiffCoroutine(staminaDiffBar, staminaBar));
         manaBar.fillAmount = playerStats.currentMana / playerStats.maxMana;
+        StartCoroutine(DiffCoroutine(manaDiffBar, manaBar));
+
+    }
+    
+    public void ShowTracker(bool show)
+    {
+        trackerObj.SetActive(show);
+    }
+
+    public void UpdateLockPoisiton(Vector3 pos)
+    {
+        var screenPos = Camera.main.WorldToScreenPoint(pos);
+        trackerObj.transform.position = screenPos;
     }
 
     public void AdjustHealthBarWidth()
@@ -125,5 +164,18 @@ public class PlayerUI : MonoBehaviour
         float widthFactor = playerStats.maxMana / (float)playerStats.maxAllowedMana;
         manaBarRect.sizeDelta = new Vector2(maxAllowedManaWidth * widthFactor, manaBarRect.sizeDelta.y);
         manaBar.fillAmount = playerStats.currentMana / playerStats.maxMana;
+    }
+    
+    private IEnumerator DiffCoroutine(Image Diff, Image Fill)
+    {
+        yield return new WaitForSeconds(2f);
+        float timeStep = 0;
+        float start = Diff.fillAmount;
+        while (timeStep <= 1)
+        {
+            timeStep += Time.deltaTime / 0.25f;
+            Diff.fillAmount = Mathf.Lerp(start, Fill.fillAmount, timeStep);
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

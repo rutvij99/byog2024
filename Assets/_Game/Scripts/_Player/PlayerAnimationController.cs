@@ -87,6 +87,8 @@ public class PlayerAnimationController : MonoBehaviour
 				{
 					obj.SetActive(data.weaponType == WeaponType.GreatSword);
 				}
+				// Notify the UI about the weapon change
+				PlayerUI.Instance.UpdateWeaponUI();
 			});
 		animator.CrossFadeInFixedTime("SwitchWeapon", 0.1f, upperBodyLayerIndex);
 	}

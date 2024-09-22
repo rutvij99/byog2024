@@ -1751,18 +1751,42 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2533460533574396893, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_DrawShape
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2533460533574396893, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_StrokeWidth
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2542397330927383508, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
       propertyPath: playerStats
       value: 
       objectReference: {fileID: 1038687044}
+    - target: {fileID: 2542397330927383508, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: noWeaponSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 55677fcac9c8eff42bcd9dec958dc741, type: 3}
     - target: {fileID: 3076095672112641047, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
       propertyPath: m_Name
       value: HudManager
       objectReference: {fileID: 0}
     - target: {fileID: 4633554838088772207, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4633554838088772207, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4633554838088772207, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4633554838088772207, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 830.57214
+      objectReference: {fileID: 0}
     - target: {fileID: 4744395427074335933, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1794,6 +1818,22 @@ PrefabInstance:
     - target: {fileID: 4844943156334441461, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222704964356054303, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_DrawShape
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222704964356054303, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_StrokeWidth
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5257735629497551389, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_DrawShape
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5257735629497551389, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_StrokeWidth
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 6317591803888728259, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1833,6 +1873,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6317591803888728259, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7805111351202465991, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7805111351202465991, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7805111351202465991, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7805111351202465991, guid: 4b331fb9378814846a3260ec4c26c665, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1994,10 +2050,10 @@ SceneRoots:
   - {fileID: 1778589221}
   - {fileID: 3772969470977643114}
   - {fileID: 3304365637510800928}
-  - {fileID: 3208686120162285407}
   - {fileID: 476957136}
   - {fileID: 1296732258}
   - {fileID: 282759566}
   - {fileID: 869102256}
   - {fileID: 1445174354}
   - {fileID: 965524890}
+  - {fileID: 3208686120162285407}
