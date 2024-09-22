@@ -3289,6 +3289,63 @@ MonoBehaviour:
   speaker: {fileID: 2111220220}
   asset: {fileID: 11400000, guid: 5948770db177bc7469553a954f1ac093, type: 2}
   nextLevel: Level3_Arena
+--- !u!1001 &1319140559
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1836371368237093465, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_Name
+      value: Checkpoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048454258029764559, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c02ddaa764dfe364eb1f168f522e3127, type: 3}
 --- !u!1 &1348177219
 GameObject:
   m_ObjectHideFlags: 0
@@ -4963,3 +5020,4 @@ SceneRoots:
   - {fileID: 1309500464}
   - {fileID: 1537500730}
   - {fileID: 1867282204}
+  - {fileID: 1319140559}

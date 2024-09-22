@@ -25,6 +25,8 @@ namespace Bosses
             if (bgSource != null)
                 Object.Destroy(bgSource.gameObject);
             
+            if(clip==null)
+                return;
             bgSource = new GameObject("BG Music").AddComponent<AudioSource>();
             Object.DontDestroyOnLoad(bgSource.gameObject);
 

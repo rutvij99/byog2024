@@ -16,11 +16,13 @@ namespace Bosses.Upgrade
     {
         public Action UpgradeDone;
 
+        [SerializeField] private AudioClip bgClip;
         [SerializeField] private string nextLevel;
         [SerializeField] private TMP_Text soulsTxt;
 
         private void Start()
         {
+            AudioManager.PlayBackgroundMusic(bgClip);
             soulsTxt.text = UpgradeStats.GetSouls().ToString();
         }
 

@@ -21,6 +21,7 @@ namespace Bosses.Cutscene
         [SerializeField] private string nextLevel;
 
         private int id = -1;
+        private bool done = false;
         
         private void Start()
         {
@@ -39,7 +40,10 @@ namespace Bosses.Cutscene
                     var anim = go.GetComponent<Animator>();
                     if (!anim.enabled)
                     {
+                        done = true;
                         anim.enabled = true;
+                        PlayerPrefs.DeleteAll();
+                        PlayerPrefs.Save();
                         return;
                     } 
                 }
@@ -49,9 +53,13 @@ namespace Bosses.Cutscene
             id++;
             if (id >= asset.Dialogs.Count)
             {
+                done = true;
                 LoadNextScene();
                 return;
             }
+
+            if (id >= asset.Dialogs.Count)
+                id = asset.Dialogs.Count - 1;
             
             body.SetActive(true);
             title.text = asset.Dialogs[id].Title;
@@ -68,7 +76,7 @@ namespace Bosses.Cutscene
         
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !done)
             {
                 AudioManager.PlaySFX(click);
                 NextDialog();

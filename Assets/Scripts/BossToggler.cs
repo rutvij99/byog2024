@@ -15,6 +15,7 @@ public class BossToggler : MonoBehaviour
    
    private void Start()
    {
+      AudioManager.PlayBackgroundMusic(null);
       AudioManager.PlayAmbiance(ambiance);
       boss = FindAnyObjectByType<BossBase>();
    }
