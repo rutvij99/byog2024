@@ -215,6 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 8610687971357885328}
+  startingWeaponType: 1
   audioMapDataAsset: {fileID: 11400000, guid: 5e890b2fccf4c224fa8d3d665766e0b7, type: 2}
   footstepClips:
   - {fileID: 8300000, guid: 6b01147ec8203e547a3371b0decbe689, type: 3}
@@ -306,7 +307,7 @@ MonoBehaviour:
   allowStaminaRegeneration: 1
   healthRegenRate: 0.5
   healthRegenDelay: 1
-  staminaRegenRate: 10
+  staminaRegenRate: 30
   staminaRegenDelay: 1
   manaRegenRate: 3
   manaRegenDelay: 1

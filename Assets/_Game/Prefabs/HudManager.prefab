@@ -1118,6 +1118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2302300050536134200}
   - component: {fileID: 2917990956685355511}
+  - component: {fileID: 8027655445830742919}
   m_Layer: 5
   m_Name: TopHolder
   m_TagString: Untagged
@@ -1172,6 +1173,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &8027655445830742919
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2067797024616682588}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2149882675323967699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1553,7 +1566,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackerObj: {fileID: 6998251901225814462}
   playerStats: {fileID: 0}
-  hudGroup: {fileID: 8722754692394206749}
+  hudGroup: {fileID: 8027655445830742919}
   deathScreenGroup: {fileID: 7293084059619563601}
   deathText: {fileID: 8031808840579405397}
   healthBar: {fileID: 3247785282068847315}
