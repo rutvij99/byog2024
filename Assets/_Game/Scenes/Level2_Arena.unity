@@ -1418,14 +1418,14 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.42764327, g: 0.5641196, b: 0.5849056, a: 1}
-  m_Intensity: 0.1
+  m_Color: {r: 0.24328054, g: 0.5883767, b: 0.7264151, a: 1}
+  m_Intensity: 0.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1

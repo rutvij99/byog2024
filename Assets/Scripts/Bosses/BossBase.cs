@@ -44,6 +44,8 @@ namespace Bosses
 
         [SerializeField] private Vector3 soulOffset = Vector3.one;
         [SerializeField] private GameObject soul;
+
+        [SerializeField] private GameObject hitFx;
         
         private BossTarget enemyTarget;
 
@@ -193,6 +195,10 @@ namespace Bosses
 
         private void OnHealthDeplete()
         {
+            PlaySFX("hit");
+            var go = Instantiate(hitFx, transform.position + new Vector3(0,1,0), Quaternion.identity);
+            Destroy(go, 2);
+            
             if (entity.CurrHealth > 0)
                 return ;
             StartCoroutine(DeathRoutine());

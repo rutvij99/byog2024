@@ -172,6 +172,7 @@ MonoBehaviour:
   afterAttackWaitDeviation: 0.25
   soulOffset: {x: 0, y: 3, z: 1.5}
   soul: {fileID: 8411123189498983111, guid: 5be3135c2488b9840b4abef3a060455a, type: 3}
+  hitFx: {fileID: 2427786012956944610, guid: da0de216ad60c5d46a6b049d61961615, type: 3}
   stageChangeAnim: {fileID: 7400000, guid: a11fa2fdec844550aa18d055ab20deb5, type: 3}
   stageChangeHealthVal: 50
   stageChangeCamera: {fileID: 8062258463608360725}

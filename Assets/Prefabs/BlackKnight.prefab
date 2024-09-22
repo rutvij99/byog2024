@@ -649,6 +649,7 @@ MonoBehaviour:
   afterAttackWaitDeviation: 0.5
   soulOffset: {x: 1, y: 1, z: 1}
   soul: {fileID: 8411123189498983111, guid: 8a94ac1b163f8d942b16a75aa750d948, type: 3}
+  hitFx: {fileID: 2427786012956944610, guid: da0de216ad60c5d46a6b049d61961615, type: 3}
   stageEffects:
   - {fileID: 5562912721528120743}
   - {fileID: 1741207105765299903}
