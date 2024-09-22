@@ -26,7 +26,7 @@ namespace Bosses.Common
                     return;
 
                 activeTarget = bt;
-                var player = bt.GetComponent<PlayerStats>();
+                var player = bt.GetComponent<PlayerController>();
                 if (player)
                 {
                     AudioManager.PlaySFX(hitSFX);
