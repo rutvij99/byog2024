@@ -50,7 +50,7 @@ namespace Bosses.Upgrade
             int lvl = GetLevel(type);
             if (lvl >= so.Table.Count - 1)
                 lvl = so.Table.Count - 1;
-            return so.Table[lvl];
+            return so.Table[lvl-1];
         }
 
         public static void FlushPrefs()
