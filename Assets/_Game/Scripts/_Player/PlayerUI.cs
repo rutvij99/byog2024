@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
@@ -76,7 +77,11 @@ public class PlayerUI : MonoBehaviour
         Sequence sequence = DOTween.Sequence()
             .AppendInterval(1)
             .Append(deathScreenGroup.DOFade(1, 1f))
-            .Join(deathText.DOScale(1.5f, 2f).SetEase(Ease.Linear)).Play();
+            .Join(deathText.DOScale(1.5f, 2f).SetEase(Ease.Linear))
+            .AppendCallback(() =>
+            {
+                SceneManager.LoadScene(this.gameObject.scene.name);
+            }).Play();
         ;
     }
 

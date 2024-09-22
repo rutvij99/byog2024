@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Bosses.Upgrade;
 using UnityEngine;
 
 public class PlayerAttackModule : MonoBehaviour
@@ -30,7 +31,8 @@ public class PlayerAttackModule : MonoBehaviour
 		{
 			allColliders.Add(target);
 			Debug.Log($"Player attacked -> {other.gameObject.name}");
-			target.TakeDamage(currentAttackInfo.damage);
+			playerController.PlayAttackSFX();
+			target.TakeDamage(currentAttackInfo.damage * UpgradeStats.GetDamageMultiplier(UpgradeType.Physical));
 		}
 	}
 
@@ -39,9 +41,15 @@ public class PlayerAttackModule : MonoBehaviour
 		
 	}
 
+	public void PlayProjectileHitSFX()
+	{
+		playerController.PlayProjectileHitSFX();
+	}
+
 	public void SpawnProjectile(GameObject projectileSpawnPoint)
 	{
 		if(playerStats.currentWeaponType != WeaponType.Wand) return;
+		playerController.PlayProjectileSFX();
         GameObject projectile = Instantiate(playerStats.currentWeaponData.projectilePrefab, projectileSpawnPoint.transform.position, Quaternion.identity);
         PlayerProjectile proj = projectile.GetComponent<PlayerProjectile>();
         Vector3 direction;
@@ -54,6 +62,6 @@ public class PlayerAttackModule : MonoBehaviour
             direction = playerController.IsFacingRight ? Vector3.right : Vector3.left;
         }
         Destroy(projectileSpawnPoint);
-        proj.Launch(direction, (int)currentAttackInfo.damage);
+        proj.Launch(this, direction, (int)currentAttackInfo.damage);
 	}
 }

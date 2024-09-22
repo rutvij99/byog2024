@@ -61,6 +61,7 @@ public class PlayerStats : MonoBehaviour
     public float subsequentAttackCostMultiplier = 1f;
     public float sprintCostPerSecond = 5f;
     public float sprintCostMultiplier = 0.4f;
+    public float iFrameHealAmount = 15f;
 
 
     [Header("Attacks")] 
@@ -231,6 +232,11 @@ public class PlayerStats : MonoBehaviour
 
 
     #region Usages
+
+    public void HealOnPerfectDodgeOnHit()
+    {
+        Heal(iFrameHealAmount);
+    }
 
     public void SwitchWeapon(WeaponType weaponType)
     {

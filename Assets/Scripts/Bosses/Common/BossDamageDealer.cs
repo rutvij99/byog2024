@@ -30,7 +30,7 @@ namespace Bosses.Common
                 if (player)
                 {
                     AudioManager.PlaySFX(hitSFX);
-                    player.TakeDamage(dmg);
+                    player.TakeDamage(dmg, hitter: this.transform);
 
                     var go = Instantiate(hitFX, other.transform.position + new Vector3(0,1,0), Quaternion.identity);
                     Destroy(go, 2);

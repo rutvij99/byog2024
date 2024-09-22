@@ -1,4 +1,5 @@
 using System.Collections;
+using Bosses.Upgrade;
 using UnityEngine;
 
 namespace Bosses
@@ -20,6 +21,11 @@ namespace Bosses
         
         private void OnDamaged()
         {
+            if (entity.CurrHealth <= 0)
+            {
+                UpgradeStats.UnlockLightening();
+            }
+            
             if (entity.CurrHealth <= stageChangeHealthVal && stage == 1)
             {
                 stage = 2;

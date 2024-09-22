@@ -16,6 +16,8 @@ MonoBehaviour:
     _serializedList:
     - Key: ground_slam
       Value: {fileID: 8300000, guid: 6125b3bce775bbd4ea2de8e5c1e112d6, type: 3}
+    - Key: dodge
+      Value: {fileID: 8300000, guid: 4a9ca6c096cf41d40a0c876d313bdd11, type: 3}
     - Key: splash
       Value: {fileID: 8300000, guid: 80561801b9b38de43a309dd21963d150, type: 3}
     - Key: projectile

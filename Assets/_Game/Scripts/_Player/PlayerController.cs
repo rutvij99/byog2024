@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Bosses;
+using Bosses.Upgrade;
 using NaughtyAttributes;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
@@ -12,6 +14,15 @@ using Random = UnityEngine.Random;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform headTransform;
+    
+    
+    [Header("FX")]
+    public AudioMapDataAsset audioMapDataAsset;
+    [SerializeField] private AudioClip[] footstepClips; // Array of footstep sounds
+    [SerializeField] private float footstepInterval = 0.5f; // Interval between footstep sounds
+    private float footstepTimer = 0f; // Timer to track footstep interval
+    // Array to hold the particle effects
+    public ParticleSystem[] hitParticleEffects;
     
     // Forward lock variables
     [Header("Target Locking")]
@@ -66,6 +77,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float stunnedIFramesTime = 1.0f; // Time during which player can't get hit after taking damage
     [SerializeField] private float dashIFramesTime = 0.2f;
     [SerializeField] private float dodgeIFramesTime = 0.3f;
+    
     
     private Rigidbody _rb;
     private PlayerStats _playerStats;
@@ -179,6 +191,7 @@ public class PlayerController : MonoBehaviour
 
     public void SwitchWeapon(WeaponType weaponType)
     {
+        if(weaponType == WeaponType.Wand && !UpgradeStats.IsLighteningUnlocked()) return;
         if(!CanChangeState()) return;
         if(_playerStats.currentWeaponType == weaponType) return;
         _playerStats.SwitchWeapon(weaponType);
@@ -316,7 +329,8 @@ public class PlayerController : MonoBehaviour
         }
         HandleMovement();
         HandleJump();
-        ApplyFallGravity(); // Adjust gravity when falling
+        ApplyFallGravity();
+        PlayFootstepSounds();
         HandleDash();
         HandleDodgeRoll();
         HandleBlock();
@@ -383,6 +397,35 @@ public class PlayerController : MonoBehaviour
     {
         _animController.SetMovement(0); // Set idle animation
         _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0); // Stop movement
+    }
+    
+    private void PlayFootstepSounds()
+    {
+        // Check if player is grounded and moving
+        if (IsGrounded && moveInput != 0 && CanChangeState())
+        {
+            footstepTimer -= Time.deltaTime; // Decrease the timer
+
+            // If the timer reaches zero, play a random footstep sound
+            if (footstepTimer <= 0f)
+            {
+                PlayRandomFootstep();
+                footstepTimer = footstepInterval; // Reset the timer
+            }
+        }
+        else
+        {
+            footstepTimer = 0f; // Reset the timer when not moving
+        }
+    }
+
+    private void PlayRandomFootstep()
+    {
+        if (footstepClips.Length > 0)
+        {
+            int index = Random.Range(0, footstepClips.Length); // Pick a random footstep sound
+            AudioManager.PlaySFX(footstepClips[index]); // Play the sound
+        }
     }
     #endregion
     
@@ -483,20 +526,11 @@ public class PlayerController : MonoBehaviour
             {
                 moveInput = IsFacingRight? -1 : 1; // Default to forward dodge if no input
             }
-            if (IsFacingRight)
-            {
-                if (moveInput >= 0) // Forward dash
-                    StartCoroutine(Dash(Vector3.right, true));
-                else // Backward dash
-                    StartCoroutine(Dash(Vector3.left, false));
-            }
+
+            if (moveInput >= 0)
+                StartCoroutine(Dash(Vector3.right, IsFacingRight ? true : false));
             else
-            {
-                if (moveInput >= 0) // Forward dodge roll
-                    StartCoroutine(Dash(Vector3.right, false));
-                else // Backward dodge roll
-                    StartCoroutine(Dash(Vector3.left, true));
-            }
+                StartCoroutine(Dash(Vector3.left, IsFacingRight ? false : true));
         }
         else
         {
@@ -527,22 +561,13 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInput == 0)
             {
-                moveInput = IsFacingRight? -1 : 1; // Default to forward dodge if no input
+                moveInput = IsFacingRight? 1 : -1; // Default to forward dodge if no input
             }
-            if (IsFacingRight)
-            {
-                if (moveInput >= 0) // Forward dodge roll
-                    StartCoroutine(DodgeRoll(Vector3.right, true));
-                else // Backward dodge roll
-                    StartCoroutine(DodgeRoll(Vector3.left, false));
-            }
+
+            if (moveInput >= 0)
+                StartCoroutine(DodgeRoll(Vector3.right, IsFacingRight ? true : false));
             else
-            {
-                if (moveInput >= 0) // Forward dodge roll
-                    StartCoroutine(DodgeRoll(Vector3.right, false));
-                else // Backward dodge roll
-                    StartCoroutine(DodgeRoll(Vector3.left, true));
-            }
+                StartCoroutine(DodgeRoll(Vector3.left, IsFacingRight ? false : true));
         }
         else
         {
@@ -566,6 +591,7 @@ public class PlayerController : MonoBehaviour
     
     private IEnumerator Dash(Vector3 direction, bool isForward)
     {
+        AudioManager.PlaySFX(audioMapDataAsset.GetClip("dodge"));
         GrantIFrames(dashIFramesTime);
         _playerStats.DashModifiers();
         IsDashing = true;
@@ -579,6 +605,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DodgeRoll(Vector3 direction, bool isForward)
     {
+        AudioManager.PlaySFX(audioMapDataAsset.GetClip("dodge"));
         GrantIFrames(dodgeIFramesTime);
         _playerStats.DodgeModifiers();
         IsDodging = true;
@@ -652,6 +679,19 @@ public class PlayerController : MonoBehaviour
         lastAttackTime = Time.time;
         IsAttacking = false;
     }
+
+    public void PlayAttackSFX()
+    {
+        AudioManager.PlaySFX(audioMapDataAsset.GetClip(Random.value > 0.3 ? $"attack_woosh_{Random.Range(2,4)}": "attack_woosh"));
+    }
+    public void PlayProjectileSFX()
+    {
+        AudioManager.PlaySFX(audioMapDataAsset.GetClip("projectile"));
+    }
+    public void PlayProjectileHitSFX()
+    {
+        AudioManager.PlaySFX(audioMapDataAsset.GetClip("electricity"));
+    }
     #endregion
     
     #region Get Hit Logic
@@ -667,6 +707,11 @@ public class PlayerController : MonoBehaviour
     {
         if (IsInvulnerable)
         {
+            if (IsDodging || IsDashing)
+            {
+                Debug.Log("Perfect Dodge");
+                _playerStats.HealOnPerfectDodgeOnHit();
+            }
             Debug.Log("Saved by iFrames");
             return;
         }
@@ -679,6 +724,8 @@ public class PlayerController : MonoBehaviour
                 damage = (int)(damage * damageNegation);
         }
         _playerStats.TakeDamage(damage);
+        SetIdle();
+        PlayHitParticleEffect();
         if (_playerStats.IsDead)
         {
             _animController.TriggerDeath();
@@ -707,17 +754,21 @@ public class PlayerController : MonoBehaviour
         Vector3 directionAwayFromHitter = (transform.position - hitter.position).normalized;
         float scaledPushBackForce = pushBackForce + (damage * 0.1f); // Scale push-back with damage
         _rb.linearVelocity = directionAwayFromHitter * scaledPushBackForce;
+        Debug.Log($"applying push back form hitter {directionAwayFromHitter * scaledPushBackForce}");
         StartCoroutine(StopPushBackAfterDelay(actualStun));
     }
 
     private IEnumerator StopPushBackAfterDelay( bool actualStun)
     {
+        // _animController.SetMovement(0); // Set idle animation
         yield return new WaitForSeconds(pushBackDuration);
         if (!actualStun)
         {
             IsStunned = false;
+            // _animController.SetStun(IsStunned);
         }
-        _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);  // Only stop horizontal movement, retain vertical velocity
+        if(moveInput == 0)
+            _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);  // Only stop horizontal movement, retain vertical velocity
     }
 
     private void StunPlayer()
@@ -735,6 +786,24 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Player recovered from stun.");
         GrantIFrames(stunnedIFramesTime);
         _animController.SetStun(IsStunned);
+    }
+    
+    // Method to play a specific particle effect
+    private void PlayHitParticleEffect()
+    {
+        // Check if we have particle effects in the array
+        if (hitParticleEffects != null && hitParticleEffects.Length > 0)
+        {
+            // Randomly select one of the particle effects
+            int index = Random.Range(0, hitParticleEffects.Length);
+            if (hitParticleEffects[index] != null)
+            {
+                ParticleSystem effect = Instantiate(hitParticleEffects[index], hitParticleEffects[index].transform.position, Quaternion.identity);
+                effect.gameObject.SetActive(true);
+                effect.Play();
+                Destroy(effect.gameObject, effect.main.duration);
+            }
+        }
     }
     #endregion
     

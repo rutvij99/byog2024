@@ -7,7 +7,19 @@ namespace Bosses.Upgrade
         private const string KEY_PHY_LVL = "Phy_Level";
         private const string KEY_ELE_LVL = "Ele_Level";
         private const string KEY_POINTS = "Souls";
+        private const string LIGHTENING_UNLOCKED = "lighening_unlocked";
 
+
+        public static void UnlockLightening()
+        {
+            PlayerPrefs.SetInt(LIGHTENING_UNLOCKED, 1);
+            PlayerPrefs.Save();
+        }
+        public static bool IsLighteningUnlocked()
+        {
+            return PlayerPrefs.HasKey(KEY_POINTS);
+        }
+        
         public static int GetSouls()
         {
             return PlayerPrefs.GetInt(KEY_POINTS, 0);
