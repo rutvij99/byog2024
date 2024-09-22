@@ -1574,7 +1574,7 @@ MonoBehaviour:
   manaBar: {fileID: 5290353353918298318}
   healthDiffBar: {fileID: 8309100193787647331}
   staminaDiffBar: {fileID: 7381768666718705197}
-  manaDiffBar: {fileID: 5290353353918298318}
+  manaDiffBar: {fileID: 4200162609373083456}
   healthBarRect: {fileID: 4844943156334441461}
   staminaBarRect: {fileID: 4744395427074335933}
   manaBarRect: {fileID: 367576014524728322}
