@@ -672,6 +672,7 @@ public class PlayerController : MonoBehaviour
         if(!_playerStats.IsAttackPossible(currentAttakInfo)) yield break;
         _playerStats.AttackModifiers(currentAttakInfo);
         IsAttacking = true;
+        PlayAttackSFX();
         _animController.TriggerAttack(currentAttakInfo);
         isComboActive = true;
         _attackModule.SetAttackInfo(currentAttakInfo);
@@ -682,7 +683,12 @@ public class PlayerController : MonoBehaviour
 
     public void PlayAttackSFX()
     {
-        AudioManager.PlaySFX(audioMapDataAsset.GetClip(Random.value > 0.3 ? $"attack_woosh_{Random.Range(2,4)}": "attack_woosh"));
+        var sfx = Random.value > 0.3 ? $"attack_woosh_{Random.Range(2, 4)}" : "attack_woosh";
+        AudioManager.PlaySFX(audioMapDataAsset.GetClip(sfx));
+    }
+    public void PlayActualDamageSFX()
+    {
+        AudioManager.PlaySFX(audioMapDataAsset.GetClip("hit"));
     }
     public void PlayProjectileSFX()
     {
@@ -735,7 +741,7 @@ public class PlayerController : MonoBehaviour
         var isStunned = UnityEngine.Random.value < stunChance || forceStun;
         if (hitter != null)
         {
-            ApplyPushBack(hitter, damage, isStunned);
+            ApplyPushBack(hitter, damage, IsStunned || isStunned);
         }
         if (!IsStunned)
         {
@@ -747,15 +753,22 @@ public class PlayerController : MonoBehaviour
         }
         _animController.TriggerHit();
     }
-    
+
+    private Coroutine pushbackRoutine;
+    private Coroutine stunRoutine;
     private void ApplyPushBack(Transform hitter, int damage, bool actualStun)
     {
-        IsStunned = true;
+        if (!actualStun)
+        {
+            IsStunned = true;
+        }
         Vector3 directionAwayFromHitter = (transform.position - hitter.position).normalized;
         float scaledPushBackForce = pushBackForce + (damage * 0.1f); // Scale push-back with damage
         _rb.linearVelocity = directionAwayFromHitter * scaledPushBackForce;
         Debug.Log($"applying push back form hitter {directionAwayFromHitter * scaledPushBackForce}");
-        StartCoroutine(StopPushBackAfterDelay(actualStun));
+        if(pushbackRoutine != null)
+            StopCoroutine(pushbackRoutine);
+        pushbackRoutine = StartCoroutine(StopPushBackAfterDelay(actualStun));
     }
 
     private IEnumerator StopPushBackAfterDelay( bool actualStun)
@@ -765,18 +778,21 @@ public class PlayerController : MonoBehaviour
         if (!actualStun)
         {
             IsStunned = false;
-            // _animController.SetStun(IsStunned);
         }
         if(moveInput == 0)
             _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);  // Only stop horizontal movement, retain vertical velocity
+        pushbackRoutine = null;
     }
 
     private void StunPlayer()
     {
+       
         Debug.Log("Player is stunned!");
         IsStunned = true;
         _animController.SetStun(IsStunned);
-        StartCoroutine(StunPlayerRoutine());
+        if(stunRoutine != null)
+            StopCoroutine(stunRoutine);
+        stunRoutine = StartCoroutine(StunPlayerRoutine());
     }
 
     private IEnumerator StunPlayerRoutine()
@@ -786,6 +802,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Player recovered from stun.");
         GrantIFrames(stunnedIFramesTime);
         _animController.SetStun(IsStunned);
+        stunRoutine = null;
     }
     
     // Method to play a specific particle effect

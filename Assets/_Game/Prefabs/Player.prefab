@@ -252,7 +252,7 @@ MonoBehaviour:
   comboAllowedTime: 0.3
   blockChance: 0.7
   damageNegation: 0.7
-  stunDuration: 1.5
+  stunDuration: 2
   stunChance: 0.3
   pushBackForce: 5
   pushBackDuration: 0.2
@@ -292,11 +292,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c1474da892fd43c38622d0e204f0185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAllowedHealth: 1000
-  maxAllowedMana: 1000
-  maxAllowedStamina: 1000
-  maxHealth: 100
-  maxMana: 50
+  maxAllowedHealth: 500
+  maxAllowedMana: 500
+  maxAllowedStamina: 500
+  maxHealth: 125
+  maxMana: 70
   maxStamina: 200
   currentHealth: 0
   currentMana: 0

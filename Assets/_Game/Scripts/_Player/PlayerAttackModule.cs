@@ -31,7 +31,7 @@ public class PlayerAttackModule : MonoBehaviour
 		{
 			allColliders.Add(target);
 			Debug.Log($"Player attacked -> {other.gameObject.name}");
-			playerController.PlayAttackSFX();
+			playerController.PlayActualDamageSFX();
 			target.TakeDamage(currentAttackInfo.damage * UpgradeStats.GetDamageMultiplier(UpgradeType.Physical));
 		}
 	}
