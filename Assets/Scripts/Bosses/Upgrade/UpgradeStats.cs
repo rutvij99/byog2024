@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Bosses.Upgrade
@@ -6,10 +7,10 @@ namespace Bosses.Upgrade
     {
         private const string KEY_PHY_LVL = "Phy_Level";
         private const string KEY_ELE_LVL = "Ele_Level";
+        private const string KEY_Fire_LVL = "Fire_Level";
         private const string KEY_POINTS = "Souls";
         private const string LIGHTENING_UNLOCKED = "lighening_unlocked";
-
-
+        
         public static void UnlockLightening()
         {
             PlayerPrefs.SetInt(LIGHTENING_UNLOCKED, 1);
@@ -32,7 +33,19 @@ namespace Bosses.Upgrade
         
         public static void Upgrade(UpgradeType type)
         {
-            var key = type == UpgradeType.Physical ? KEY_PHY_LVL : KEY_ELE_LVL;
+            string key="";
+            switch (type)
+            {
+                case UpgradeType.Physical:
+                    key = KEY_PHY_LVL;
+                    break;
+                case UpgradeType.Electrical:
+                    key = KEY_ELE_LVL;
+                    break;
+                case UpgradeType.Fire:
+                    key = KEY_Fire_LVL;
+                    break;
+            }
             int val = PlayerPrefs.GetInt(key, 1);
             PlayerPrefs.SetInt(key, val + 1);
             PlayerPrefs.Save();
@@ -40,7 +53,19 @@ namespace Bosses.Upgrade
 
         public static int GetLevel(UpgradeType type)
         {
-            var key = type == UpgradeType.Physical ? KEY_PHY_LVL : KEY_ELE_LVL;
+            string key="";
+            switch (type)
+            {
+                case UpgradeType.Physical:
+                    key = KEY_PHY_LVL;
+                    break;
+                case UpgradeType.Electrical:
+                    key = KEY_ELE_LVL;
+                    break;
+                case UpgradeType.Fire:
+                    key = KEY_Fire_LVL;
+                    break;
+            }
             return PlayerPrefs.GetInt(key, 1);
         }
 
@@ -57,6 +82,7 @@ namespace Bosses.Upgrade
         {
             PlayerPrefs.DeleteKey(KEY_PHY_LVL);
             PlayerPrefs.DeleteKey(KEY_ELE_LVL);
+            PlayerPrefs.DeleteKey(KEY_Fire_LVL);
             PlayerPrefs.DeleteKey(KEY_POINTS);
             PlayerPrefs.Save();
         }
