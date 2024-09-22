@@ -30,7 +30,7 @@ namespace Bosses
             float t = 0;
             while (t <= 1)
             {
-                t += Time.deltaTime;
+                t += Time.deltaTime / 0.25f;
                 cg.alpha = Mathf.Lerp(0, 1, t);
                 yield return new WaitForEndOfFrame();
             }
@@ -40,7 +40,7 @@ namespace Bosses
             t = 0;
             while (t <= 1)
             {
-                t += Time.deltaTime;
+                t += Time.deltaTime / 0.25f;
                 cg.alpha = Mathf.Lerp(1, 0, t);
                 yield return new WaitForEndOfFrame();
             }

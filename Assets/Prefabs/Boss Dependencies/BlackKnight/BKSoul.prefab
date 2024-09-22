@@ -68,8 +68,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b38fbc9454fc4abcb9a8844b5b9838ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rewardClip: {fileID: 8300000, guid: 9193dfcc16e08da49b53ffd39de86b99, type: 3}
+  nextLevel: Upgrade_3
+  souls: 3
   targetOffset: {x: 0, y: 1, z: 0}
-  chaseSpeed: 10
+  chaseSpeed: 7
   fx: {fileID: 4568621449396615745, guid: 836f721988a69e64b8c023130a7268dc, type: 3}
 --- !u!54 &3491091180793672554
 Rigidbody:

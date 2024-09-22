@@ -20,6 +20,24 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 1a2d8ca44e80c244cb9b394b20c7c9bb
+  - enabled: 1
+    path: Assets/_Game/Scenes/Level1_Arena.unity
+    guid: 17650e1e2d96cc24ba5db2a83e829f81
+  - enabled: 1
+    path: Assets/_Game/Scenes/Level2_Arena.unity
+    guid: 3c33165f34a9e2646bf77fd9c63b84ba
+  - enabled: 1
+    path: Assets/_Game/Scenes/Level3_Arena.unity
+    guid: d3cae0a8b0d2de84c843625fd3ae43da
+  - enabled: 1
+    path: Assets/Scenes/Upgrade_1.unity
+    guid: e389de35f749f6242b3466025435f868
+  - enabled: 1
+    path: Assets/Scenes/Upgrade_2.unity
+    guid: 34abb47a603352348acecbc1fd61c512
+  - enabled: 1
+    path: Assets/Scenes/Upgrade_3.unity
+    guid: f3b508299dc06b14f8fd03dbcd057f77
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -1,12 +1,16 @@
 using System;
 using System.Collections;
 using Bosses;
+using Bosses.Upgrade;
 using UnityEngine;
 
 namespace Entity
 {
     public class SoulItem : MonoBehaviour
     {
+        [SerializeField] private AudioClip rewardClip;
+        [SerializeField] private string nextLevel;
+        [SerializeField] private int souls=1;
         [SerializeField] private Vector3 targetOffset;
         [SerializeField] private float chaseSpeed = 1.5f;
         [SerializeField] private GameObject fx;
@@ -31,12 +35,20 @@ namespace Entity
             if (other.GetComponent<BossTarget>())
             {
                 var go = Instantiate(fx, transform.position, Quaternion.identity);
-                
+                Destroy(go.gameObject);
                 // do something here
-                
-                Destroy(go, 2);
-                Destroy(this.gameObject);
+                UpgradeStats.AddSouls(souls);
+                AudioManager.PlaySFX(rewardClip);
+                StartCoroutine(Kill());
             }
+        }
+
+        IEnumerator Kill()
+        {
+            transform.localScale = Vector3.zero;
+            yield return new WaitForSeconds(3);
+            SceneLoader.Request(nextLevel);
+            Destroy(this.gameObject);
         }
     }
 }

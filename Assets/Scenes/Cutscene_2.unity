@@ -3288,7 +3288,7 @@ MonoBehaviour:
   msg: {fileID: 1021174141}
   speaker: {fileID: 2111220220}
   asset: {fileID: 11400000, guid: 1c574f3ddc1a38540a13be6cc367167f, type: 2}
-  nextLevel: Cutscene_3
+  nextLevel: Level2_Arena
 --- !u!1 &1348177219
 GameObject:
   m_ObjectHideFlags: 0

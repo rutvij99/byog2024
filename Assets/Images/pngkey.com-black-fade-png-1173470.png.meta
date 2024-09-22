@@ -1,12 +1,5 @@
 fileFormatVersion: 2
-guid: 8b7eafbd2dd69234b8a8bc456dae2f99
-AssetOrigin:
-  serializedVersion: 1
-  productId: 140655
-  packageName: Fantasy Weapon Icons
-  packageVersion: 1.01
-  assetPath: Assets/FantasyWeaponIcons/FantasyWeaponIcons_png/staves/stave_07_b.PNG
-  uploadId: 349250
+guid: 2d3e5838deff2064397041c64f952237
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -41,12 +34,12 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -70,9 +63,9 @@ TextureImporter:
   compressionQualitySet: 0
   textureFormatSet: 0
   ignorePngGamma: 0
-  applyGammaDecoding: 1
+  applyGammaDecoding: 0
   swizzle: 50462976
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
