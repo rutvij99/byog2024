@@ -146,11 +146,11 @@ public class PlayerController : MonoBehaviour
         CheckCayoteTimer();
         CheckInput();
         CheckLockTarget();
-        if (CanChangeState() && moveInput == 0)
-        {
-            // temp hack which doesn't seme to do much 
-            SetIdle();
-        }
+        // if (CanChangeState() && moveInput == 0)
+        // {
+        //     // temp hack which doesn't seme to do much 
+        //     SetIdle();
+        // }
     }
 
     private void CheckInput()
@@ -665,7 +665,11 @@ public class PlayerController : MonoBehaviour
     }
     public void TakeDamage(int damage, bool forceStun = false, Transform hitter = null)
     {
-        if (IsInvulnerable) return;
+        if (IsInvulnerable)
+        {
+            Debug.Log("Saved by iFrames");
+            return;
+        }
         lastHitTime = Time.time;
         Debug.Log("Player got hit! Damage: " + damage);
         if (IsBlocking)
