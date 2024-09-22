@@ -3236,7 +3236,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: ddc0895a132df4d4baf9b1a2abf53c61, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 71dc1fa3a2cbd404d9db8d99e05e0b81, type: 2}
 --- !u!4 &304212079
 Transform:
   m_ObjectHideFlags: 0
@@ -4762,7 +4762,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -4819,7 +4819,7 @@ Transform:
   m_GameObject: {fileID: 463401241}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.2, y: 3.47, z: 0}
+  m_LocalPosition: {x: -18.2, y: 6.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6646,7 +6646,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -6703,7 +6703,7 @@ Transform:
   m_GameObject: {fileID: 706422545}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.01, y: 3.47, z: 4.57}
+  m_LocalPosition: {x: -8.01, y: 6.01, z: 4.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10093,7 +10093,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -10150,7 +10150,7 @@ Transform:
   m_GameObject: {fileID: 1208175427}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.98, y: 3.47, z: -8.35}
+  m_LocalPosition: {x: -7.98, y: 6.01, z: -8.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14057,7 +14057,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Ctrl - Dash
+  m_text: 'Space - Jump
+
+    Ctrl - Dash
 
     Alt - Roll'
   m_isRightToLeft: 0
@@ -14670,7 +14672,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -14727,7 +14729,7 @@ Transform:
   m_GameObject: {fileID: 1804768424}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.23, y: 3.47, z: -4.26}
+  m_LocalPosition: {x: 0.23, y: 6.01, z: -4.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15071,7 +15073,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -15128,7 +15130,7 @@ Transform:
   m_GameObject: {fileID: 1835521335}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.13, y: 3.47, z: 1.73}
+  m_LocalPosition: {x: 10.13, y: 6.01, z: 1.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17497,7 +17499,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Fight Starts Byound this point
+  m_text: Fight Starts Beyond this point
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cc6c4cb157e2c9943bde2307eb100465, type: 2}
   m_sharedMaterial: {fileID: -896533073319749798, guid: cc6c4cb157e2c9943bde2307eb100465, type: 2}
