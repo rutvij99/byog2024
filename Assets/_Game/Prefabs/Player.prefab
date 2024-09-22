@@ -253,9 +253,9 @@ MonoBehaviour:
   blockChance: 0.7
   damageNegation: 0.7
   stunDuration: 2
-  stunChance: 0.3
+  stunChance: 0.2
   pushBackForce: 5
-  pushBackDuration: 0.2
+  pushBackDuration: 0.1
   hitIFrames: 1
   stunnedIFramesTime: 1
   dashIFramesTime: 0.35

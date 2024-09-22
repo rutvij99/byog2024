@@ -293,6 +293,22 @@ public class PlayerController : MonoBehaviour
         bool wasGrounded = IsGrounded;
         IsGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
         _animController.SetGrounded(IsGrounded);
+
+        // Check if the player just landed
+        if (!wasGrounded && IsGrounded)
+        {
+            PlayLandingSound();  // Call the function to play landing sound
+        }
+    }
+
+    private void PlayLandingSound()
+    {
+        // You can reuse the footstep sound array for landing sounds
+        if (footstepClips.Length > 0)
+        {
+            int index = Random.Range(0, footstepClips.Length);  // Pick a random footstep sound for the landing
+            AudioManager.PlaySFX(footstepClips[index]);         // Play the landing sound
+        }
     }
 
     private void CheckCayoteTimer()
