@@ -297,7 +297,7 @@ MonoBehaviour:
   maxAllowedStamina: 500
   maxHealth: 125
   maxMana: 70
-  maxStamina: 200
+  maxStamina: 150
   currentHealth: 0
   currentMana: 0
   currentStamina: 0
@@ -306,7 +306,7 @@ MonoBehaviour:
   allowStaminaRegeneration: 1
   healthRegenRate: 0.5
   healthRegenDelay: 1
-  staminaRegenRate: 80
+  staminaRegenRate: 10
   staminaRegenDelay: 1
   manaRegenRate: 3
   manaRegenDelay: 1

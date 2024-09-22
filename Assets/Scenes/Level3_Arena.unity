@@ -22754,6 +22754,10 @@ PrefabInstance:
       value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 7393764292214914580, guid: d004b3e86e4d848fea8d03166dbdfb0d, type: 3}
+      propertyPath: startingWeaponType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7393764292214914580, guid: d004b3e86e4d848fea8d03166dbdfb0d, type: 3}
       propertyPath: cinemachineTargetGroup
       value: 
       objectReference: {fileID: 974811097}

@@ -14,8 +14,9 @@ using Random = UnityEngine.Random;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform headTransform;
-    
-    
+
+
+    [FormerlySerializedAs("startindWeaponType")] [SerializeField] private WeaponType startingWeaponType = WeaponType.SwordShield;
     [Header("FX")]
     public AudioMapDataAsset audioMapDataAsset;
     [SerializeField] private AudioClip[] footstepClips; // Array of footstep sounds
@@ -144,7 +145,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        SwitchWeapon(WeaponType.SwordShield);
+        SwitchWeapon(startingWeaponType);
     }
 
     private void Update()

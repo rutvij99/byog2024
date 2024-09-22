@@ -20,45 +20,45 @@ MonoBehaviour:
     staminaCost: 25
     manaCost: 0
     healthCost: 0
-    damage: 15
+    damage: 12
   lightMeleeAttacks:
   - attackId: AttackCombo_1
     attackDuration: 0.3
-    staminaCost: 10
+    staminaCost: 14
     manaCost: 0
     healthCost: 0
-    damage: 10
+    damage: 8
   - attackId: AttackCombo_2
     attackDuration: 0.3
-    staminaCost: 10
+    staminaCost: 14
     manaCost: 0
     healthCost: 0
-    damage: 10
+    damage: 8
   - attackId: AttackCombo_3
     attackDuration: 0.3
-    staminaCost: 15
+    staminaCost: 18
     manaCost: 0
     healthCost: 0
-    damage: 10
+    damage: 9
   - attackId: AttackCombo_4
     attackDuration: 0.7
     staminaCost: 20
     manaCost: 0
     healthCost: 0
-    damage: 10
+    damage: 9
   - attackId: AttackCombo_5
     attackDuration: 1
     staminaCost: 25
     manaCost: 0
     healthCost: 0
-    damage: 15
+    damage: 12
   heavyMeleeAttacks:
   - attackId: HeavyAttack_1
     attackDuration: 1
     staminaCost: 40
     manaCost: 0
     healthCost: 0
-    damage: 26
+    damage: 18
   maxWalkSpeed: 5
   maxRunSpeed: 8
   triggerObjs:
