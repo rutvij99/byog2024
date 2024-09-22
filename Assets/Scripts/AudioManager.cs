@@ -51,5 +51,15 @@ namespace Bosses
             Object.Destroy(sfx.gameObject, clip.length);
             sfx.PlayOneShot(clip);
         }
+        
+        public static void PlayAmbiance(AudioClip clip)
+        {
+            var ambiance = new GameObject("Ambiance").AddComponent<AudioSource>();
+            ambiance.outputAudioMixerGroup = Mixer.FindMatchingGroups("Master/Ambiance")[0];
+            
+            ambiance.loop = true;
+            ambiance.clip = clip;
+            ambiance.Play();
+        }
     }
 }

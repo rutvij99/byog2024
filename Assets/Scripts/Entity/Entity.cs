@@ -27,7 +27,10 @@ namespace Entity
             
             if(DataAsset)
                 CurrHealth = DataAsset.MaxHealth;
+        }
 
+        public void Activate()
+        {
             if (HealthGUIPrefab)
             {
                 healthbar = Instantiate(HealthGUIPrefab).GetComponent<Healthbar>();
@@ -35,7 +38,7 @@ namespace Entity
                 healthbar.SetTitle(DataAsset.EntityName);
             }
         }
-
+        
         private void Update()
         {
             if (testDamage)

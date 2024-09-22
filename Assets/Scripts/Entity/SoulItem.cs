@@ -15,6 +15,7 @@ namespace Entity
         [SerializeField] private float chaseSpeed = 1.5f;
         [SerializeField] private GameObject fx;
         private bool moveToPlayer;
+        private bool done;
         
         private IEnumerator Start()
         {
@@ -32,8 +33,9 @@ namespace Entity
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<BossTarget>())
+            if (other.GetComponent<BossTarget>() && !done)
             {
+                done = true;
                 var go = Instantiate(fx, transform.position, Quaternion.identity);
                 Destroy(go.gameObject);
                 // do something here

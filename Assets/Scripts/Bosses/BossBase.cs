@@ -117,6 +117,7 @@ namespace Bosses
 
         public void ActivateBoss()
         {
+            entity.Activate();
             AudioManager.PlayBackgroundMusic(bossMusicClip);
             StartCoroutine(BossActivation());
         }

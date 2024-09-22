@@ -36,9 +36,8 @@ namespace Bosses
             PlayAnimationClip(diveOutClip);
             PlaySFX("splash");
             var damager = Instantiate(damagerPrefab, transform.position, Quaternion.identity).GetComponent<BossDamageDealer>();
-            yield return new WaitForSeconds(diveOutClip.length / 4f);
             damager.DealDamage(damage);
-            yield return new WaitForSeconds(diveOutClip.length / 4f);
+            yield return new WaitForSeconds(diveOutClip.length / 2f);
             Destroy(damager.gameObject);
             yield return new WaitForSeconds(diveOutClip.length / 2f);
             PlayIdleAnimation();

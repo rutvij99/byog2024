@@ -107,6 +107,7 @@ MonoBehaviour:
   cinemachineTargetGroup: {fileID: 0}
   currentTarget: {fileID: 0}
   isTargetLockEnabled: 0
+  maxTargetDistance: 25
   walkSpeed: 5
   runSpeed: 8
   jumpForce: 10
@@ -183,7 +184,7 @@ MonoBehaviour:
   allowStaminaRegeneration: 1
   healthRegenRate: 0.5
   healthRegenDelay: 1
-  staminaRegenRate: 10
+  staminaRegenRate: 80
   staminaRegenDelay: 1
   manaRegenRate: 3
   manaRegenDelay: 1
