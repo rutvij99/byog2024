@@ -210,6 +210,8 @@ public class PlayerController : MonoBehaviour
 
     public void CheckLockTarget()
     {
+        DisableLockIfTooFar();
+        
         if(!targetLockInput) return;
         targetLockInput = false;
         isTargetLockEnabled = !isTargetLockEnabled;
@@ -233,6 +235,21 @@ public class PlayerController : MonoBehaviour
         currentTarget = closestTarget;
         cinemachineTargetGroup.AddMember(currentTarget.transform, 1, 0.5f);
         currentTarget.SetLock(true);
+    }
+
+    private void DisableLockIfTooFar()
+    {
+        if(currentTarget == null)
+            return;
+
+        var dist = Vector3.Distance(transform.position, currentTarget.transform.position);
+        if (dist >= 20f)
+        {
+            isTargetLockEnabled = false;
+            cinemachineTargetGroup.RemoveMember(currentTarget.transform);
+            currentTarget.SetLock(false);
+            currentTarget = null;
+        }
     }
     
     private PlayerTarget FindClosestTarget()
