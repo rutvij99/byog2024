@@ -67,7 +67,7 @@ public class PlayerAnimationHelper : MonoBehaviour
 
 	public void EnableTrigger(string triggerName)
 	{
-		Debug.Log($"Enable Trigger Called {triggerName}");
+		// Debug.Log($"Enable Trigger Called {triggerName}");
 		foreach (var col in _colliders)
 		{
 			col.enabled = true;
@@ -76,7 +76,7 @@ public class PlayerAnimationHelper : MonoBehaviour
 
 	public void DisableTrigger(string triggerName)
 	{
-		Debug.Log($"Disable Trigger Called {triggerName}");
+		// Debug.Log($"Disable Trigger Called {triggerName}");
 		foreach (var col in _colliders)
 		{
 			col.enabled = false;

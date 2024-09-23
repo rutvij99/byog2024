@@ -28,12 +28,6 @@ MonoBehaviour:
     manaCost: 15
     healthCost: 0
     damage: 9
-  - attackId: W_C2
-    attackDuration: 0.5
-    staminaCost: 10
-    manaCost: 15
-    healthCost: 0
-    damage: 9
   heavyMeleeAttacks: []
   maxWalkSpeed: 6
   maxRunSpeed: 9

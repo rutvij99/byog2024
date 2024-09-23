@@ -22,10 +22,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip[] footstepClips; // Array of footstep sounds
     [SerializeField] private float footstepInterval = 0.5f; // Interval between footstep sounds
     private float footstepTimer = 0f; // Timer to track footstep interval
-    // Array to hold the particle effects
     public ParticleSystem[] hitParticleEffects;
     
-    // Forward lock variables
     [Header("Target Locking")]
     [FormerlySerializedAs("tg")] public CinemachineTargetGroup cinemachineTargetGroup;
     public PlayerTarget currentTarget;
@@ -159,11 +157,6 @@ public class PlayerController : MonoBehaviour
         CheckCayoteTimer();
         CheckInput();
         CheckLockTarget();
-        // if (CanChangeState() && moveInput == 0)
-        // {
-        //     // temp hack which doesn't seme to do much 
-        //     SetIdle();
-        // }
     }
 
     private void CheckInput()
@@ -171,17 +164,20 @@ public class PlayerController : MonoBehaviour
         moveInput = Input.GetAxis("Horizontal");
         if (Input.GetKeyDown(KeyCode.Space))
             jumpInput = true;
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-            dashInput = true;
         if (Input.GetKeyDown(KeyCode.LeftAlt))
+            dashInput = true;
+        if (Input.GetKeyDown(KeyCode.LeftControl))
             dodgeInput = true;
         if (Input.GetKeyDown(KeyCode.Mouse0))  // Left mouse button for attack
             lightAttackInput = true;
         if (Input.GetKeyDown(KeyCode.Mouse1))  // Left mouse button for attack
             heavyAttackInput = true;
+        
         blockInput = Input.GetKey(KeyCode.E);
+        
         if (Input.GetKeyDown(KeyCode.Q))
             targetLockInput = true;
+        
         if(Input.GetKeyDown(KeyCode.Alpha1))
             SwitchWeapon(WeaponType.SwordShield);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -192,7 +188,6 @@ public class PlayerController : MonoBehaviour
 
     public void SwitchWeapon(WeaponType weaponType)
     {
-        if(weaponType == WeaponType.Wand && !UpgradeStats.IsLighteningUnlocked()) return;
         if(!CanChangeState()) return;
         if(_playerStats.currentWeaponType == weaponType) return;
         _playerStats.SwitchWeapon(weaponType);
@@ -258,16 +253,13 @@ public class PlayerController : MonoBehaviour
         PlayerTarget closestTarget = null;
         float closestDistanceSqr = Mathf.Infinity;
 
-        // Assuming you have a way to get a list of all potential targets, like:
         PlayerTarget[] allTargets = FindObjectsOfType<PlayerTarget>(); 
 
         foreach (var target in allTargets)
         {
-            // Calculate the squared distance (to avoid unnecessary square roots)
             float distanceSqr = (target.transform.position - transform.position).sqrMagnitude;
 
-            // Check if the target is within the max distance and closer than the previous closest target
-            Debug.Log($"{target} - {distanceSqr} -> {maxTargetDistance * maxTargetDistance}");
+            // Debug.Log($"{target} - {distanceSqr} -> {maxTargetDistance * maxTargetDistance}");
             if (distanceSqr < closestDistanceSqr && distanceSqr <= maxTargetDistance * maxTargetDistance)
             {
                 closestTarget = target;

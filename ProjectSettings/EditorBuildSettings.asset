@@ -6,38 +6,38 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
+    path: Assets/_Game/Scenes/Jam/MainMenu.unity
     guid: 1a2d8ca44e80c244cb9b394b20c7c9bb
   - enabled: 1
-    path: Assets/Scenes/Cutscene_1.unity
+    path: Assets/_Game/Scenes/Jam/Cutscene_1.unity
     guid: eccbd9876cd5c404f95adf0919ba29ff
   - enabled: 1
-    path: Assets/Scenes/Cutscene_2.unity
+    path: Assets/_Game/Scenes/Jam/Cutscene_2.unity
     guid: 7642007c134b1084ba2ea437927eaeca
   - enabled: 1
-    path: Assets/Scenes/Cutscene_3.unity
+    path: Assets/_Game/Scenes/Jam/Cutscene_3.unity
     guid: 617b4df59daa2294b93b5b03427d0cd7
   - enabled: 1
-    path: Assets/Scenes/Cutscene_final.unity
+    path: Assets/_Game/Scenes/Jam/Cutscene_final.unity
     guid: 084509d5bffb1524abd36e640347847c
   - enabled: 1
-    path: Assets/Scenes/Level1_Arena.unity
+    path: Assets/_Game/Scenes/Jam/Level1_Arena.unity
     guid: 17650e1e2d96cc24ba5db2a83e829f81
   - enabled: 1
-    path: Assets/Scenes/Level2_Arena.unity
+    path: Assets/_Game/Scenes/Jam/Level2_Arena.unity
     guid: 3c33165f34a9e2646bf77fd9c63b84ba
   - enabled: 1
-    path: Assets/Scenes/Level3_Arena.unity
+    path: Assets/_Game/Scenes/Jam/Level3_Arena.unity
     guid: d3cae0a8b0d2de84c843625fd3ae43da
   - enabled: 1
-    path: Assets/Scenes/Upgrade_1.unity
+    path: Assets/_Game/Scenes/Jam/Upgrade_1.unity
     guid: e389de35f749f6242b3466025435f868
   - enabled: 1
-    path: Assets/Scenes/Upgrade_2.unity
+    path: Assets/_Game/Scenes/Jam/Upgrade_2.unity
     guid: 34abb47a603352348acecbc1fd61c512
   - enabled: 1
-    path: Assets/Scenes/Upgrade_3.unity
+    path: Assets/_Game/Scenes/Jam/Upgrade_3.unity
     guid: f3b508299dc06b14f8fd03dbcd057f77
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 9c648095b442244589b4962753226a64, type: 3}
   m_UseUCBPForAssetBundles: 0

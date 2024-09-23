@@ -61,5 +61,6 @@ MonoBehaviour:
     damage: 0
   maxWalkSpeed: 3
   maxRunSpeed: 6
-  triggerObjs: []
+  triggerObjs:
+  - Sword7_L
   projectilePrefab: {fileID: 0}
