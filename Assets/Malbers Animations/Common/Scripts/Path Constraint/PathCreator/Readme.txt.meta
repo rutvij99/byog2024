@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 45d39909e02cffd45a172fb6d9857e35
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 148877
+  packageName: Animal Controller (Malbers Character Controller)
+  packageVersion: 1.4.5a
+  assetPath: Assets/Malbers Animations/Common/Scripts/Path Constraint/PathCreator/Readme.txt
+  uploadId: 690757

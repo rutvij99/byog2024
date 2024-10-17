@@ -1,0 +1,29 @@
+/*
+*  Author: #AUTHOR#
+*  Created On: #CREATIONDATE#
+* 
+*  Copyright (c) #YEAR# #COMPANYNAME#
+*/
+
+using UnityEngine;
+
+namespace #PROJECTNAME#
+{
+    public class #SCRIPTNAME# : Singleton<#SCRIPTNAME#>
+    {
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+    
+        private void Start()
+        {
+            
+        }
+    
+        private void Update()
+        {
+            
+        }
+    }
+}

@@ -1,0 +1,16 @@
+/*
+*  Author: #AUTHOR#
+*  Created On: #CREATIONDATE#
+* 
+*  Copyright (c) #YEAR# #COMPANYNAME#
+*/
+
+using UnityEngine;
+
+namespace #PROJECTNAME#
+{
+    public static class #SCRIPTNAME#
+    {
+        
+    }
+}

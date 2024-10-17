@@ -1,0 +1,29 @@
+/*
+*  Author: #AUTHOR#
+*  Created On: #CREATIONDATE#
+* 
+*  Copyright (c) #YEAR# #COMPANYNAME#
+*/
+
+using UnityEngine;
+
+namespace #PROJECTNAME#
+{
+    public class #SCRIPTNAME# : MonoBehaviour
+    {
+        private void Awake()
+        {
+            
+        }
+    
+        private void Start()
+        {
+            
+        }
+    
+        private void Update()
+        {
+            
+        }
+    }
+}

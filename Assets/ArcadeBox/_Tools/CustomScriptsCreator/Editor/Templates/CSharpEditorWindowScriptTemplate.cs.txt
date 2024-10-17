@@ -1,0 +1,32 @@
+/*
+*  Author: #AUTHOR#
+*  Created On: #CREATIONDATE#
+* 
+*  Copyright (c) #YEAR# #COMPANYNAME#
+*/
+
+using UnityEngine;
+using UnityEditor;
+
+namespace #PROJECTNAME#.Editor
+{
+    public class #SCRIPTNAME# : EditorWindow
+    {
+        private static #SCRIPTNAME# window;
+
+        [MenuItem("ArcadeBox/Window Name", false, 1)]
+        public static void ShowWindow() 
+        { 
+            window = GetWindow<#SCRIPTNAME#>("Window Name");
+            window.maxSize = new Vector2(400, 400);
+            window.minSize = new Vector2(400, 400);
+
+            window.Show();
+        }
+
+        private void OnGUI()
+        {
+            
+        }
+    }
+}

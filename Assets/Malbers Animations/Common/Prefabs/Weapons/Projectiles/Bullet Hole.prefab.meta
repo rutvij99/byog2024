@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 58b3b7a5c5273e24aa8931f09e57c303
+labels:
+- Weapon
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 148877
+  packageName: Animal Controller (Malbers Character Controller)
+  packageVersion: 1.4.5a
+  assetPath: Assets/Malbers Animations/Common/Prefabs/Weapons/Projectiles/Bullet
+    Hole.prefab
+  uploadId: 690757

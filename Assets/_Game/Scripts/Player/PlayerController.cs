@@ -410,13 +410,17 @@ public class PlayerController : MonoBehaviour
             _animController.SetMovement(moveInput < 0 ? -1f : animationState); // Backward or Running/Walking forward
         else
             _animController.SetMovement(moveInput > 0 ? -1f : animationState); // Backward or Running/Walking forward
-        _rb.linearVelocity = new Vector3(direction * speed, _rb.linearVelocity.y, 0);
+    
+        // Change movement from x-axis to z-axis
+        _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, direction * speed);
     }
 
     private void HandleMoveWithTurn(float speed, int animationState)
     {
         _animController.SetMovement(animationState);
-        _rb.linearVelocity = new Vector3(moveInput * speed, _rb.linearVelocity.y, 0);
+    
+        // Change movement from x-axis to z-axis
+        _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, moveInput * speed);
     }
     
     private void SetIdle()
@@ -486,7 +490,7 @@ public class PlayerController : MonoBehaviour
     private void RotateToDirection(bool faceRight)
     {
         IsFacingRight = faceRight;
-        transform.rotation = Quaternion.Euler(0, faceRight ? 90 : -90, 0);
+        transform.rotation = Quaternion.Euler(0, faceRight ? 0 : 180, 0);
     }
     #endregion
 
@@ -514,7 +518,8 @@ public class PlayerController : MonoBehaviour
     
     private void Jump(bool isDoubleJump)
     {
-        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, isDoubleJump ? doubleJumpForce : jumpForce, 0);
+        // Apply jump force along z-axis instead of x-axis
+        _rb.linearVelocity = new Vector3(0, isDoubleJump ? doubleJumpForce : jumpForce, _rb.linearVelocity.z);
         _animController.TriggerJump(isDoubleJump);
     }
     
@@ -554,25 +559,25 @@ public class PlayerController : MonoBehaviour
             }
 
             if (moveInput >= 0)
-                StartCoroutine(Dash(Vector3.right, IsFacingRight ? true : false));
+                StartCoroutine(Dash(Vector3.forward, IsFacingRight ? true : false));
             else
-                StartCoroutine(Dash(Vector3.left, IsFacingRight ? false : true));
+                StartCoroutine(Dash(Vector3.back, IsFacingRight ? false : true));
         }
         else
         {
             if (moveInput == 0)
             {
                 if (IsFacingRight)
-                    StartCoroutine(Dash(Vector3.left, false));
+                    StartCoroutine(Dash(Vector3.back, false));
                 else
-                    StartCoroutine(Dash(Vector3.right, false));
+                    StartCoroutine(Dash(Vector3.forward, false));
             }
             else
             {
                 if (moveInput >= 0) // Forward dash
-                    StartCoroutine(Dash(Vector3.right, true));
+                    StartCoroutine(Dash(Vector3.forward, true));
                 else // Backward dash
-                    StartCoroutine(Dash(Vector3.left, true));
+                    StartCoroutine(Dash(Vector3.back, true));
             }
         }
     }
@@ -591,25 +596,25 @@ public class PlayerController : MonoBehaviour
             }
 
             if (moveInput >= 0)
-                StartCoroutine(DodgeRoll(Vector3.right, IsFacingRight ? true : false));
+                StartCoroutine(DodgeRoll(Vector3.forward, IsFacingRight ? true : false));
             else
-                StartCoroutine(DodgeRoll(Vector3.left, IsFacingRight ? false : true));
+                StartCoroutine(DodgeRoll(Vector3.back, IsFacingRight ? false : true));
         }
         else
         {
             if (moveInput == 0)
             {
                 if (IsFacingRight)
-                    StartCoroutine(DodgeRoll(Vector3.left, false));
+                    StartCoroutine(DodgeRoll(Vector3.back, false));
                 else
-                    StartCoroutine(DodgeRoll(Vector3.right, false));
+                    StartCoroutine(DodgeRoll(Vector3.forward, false));
             }
             else
             {
                 if (moveInput >= 0) // Forward dodge roll
-                    StartCoroutine(DodgeRoll(Vector3.right, true));
+                    StartCoroutine(DodgeRoll(Vector3.forward, true));
                 else // Backward dodge roll
-                    StartCoroutine(DodgeRoll(Vector3.left, true));
+                    StartCoroutine(DodgeRoll(Vector3.back, true));
             }
         }
     }
