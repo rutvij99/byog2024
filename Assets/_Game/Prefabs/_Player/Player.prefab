@@ -296,9 +296,9 @@ MonoBehaviour:
   maxAllowedHealth: 500
   maxAllowedMana: 500
   maxAllowedStamina: 500
-  maxHealth: 125
-  maxMana: 70
-  maxStamina: 150
+  maxHealth: 500
+  maxMana: 500
+  maxStamina: 500
   currentHealth: 0
   currentMana: 0
   currentStamina: 0
